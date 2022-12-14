@@ -15,6 +15,10 @@ See [`CITATION.bib`](CITATION.bib) for the relevant reference(s).
 !!! note
     This is a julia package created using `okatsn`'s preference, and this package is expected to be registered to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) for CIs to work properly.
 
+## Adding secrets
+!!! warning
+    You have to add `ACCESS_OKREGISTRY` to the secret under the remote repo (e.g., https://github.com/okatsn/{{{PKG}}}.jl)
+
 ## Tips for connecting to remote
 Connect to remote:
 1. Switch to the local directory of this project ({{{PKG}}})
