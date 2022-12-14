@@ -1,0 +1,131 @@
+# You have to set PAT and add secrete ACCESS_OKREGISTRY in the repo {{{PKG}}}
+# https://stevenmortimer.com/running-github-actions-sequentially/
+# see also the default template: https://github.com/JuliaCI/PkgTemplates.jl/blob/master/templates/github/workflows/register.yml
+
+name: CI
+on:
+  push:
+    branches:
+    <<#BRANCH>>
+      - <<BRANCH>>
+    <</BRANCH>>
+    tags: ['*']
+  pull_request:
+concurrency:
+  # Skip intermediate builds: always.
+  # Cancel intermediate builds: only if it is a pull request build.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+jobs:
+  updateokreg:
+    # if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: 1.6.7
+      - uses: actions/checkout@v3 # see https://github.com/actions/checkout
+        with:
+          path: <<&PKG>>
+      - uses: actions/checkout@v3 # see https://github.com/actions/checkout
+        with:
+          repository: okatsn/OkRegistry
+          path: OkRegistry
+          token: ${{ secrets.ACCESS_OKREGISTRY }}
+    # actions/checkout clones repo
+      - run: |
+          cd OkRegistry
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
+          julia --project=@. -e '
+            using Pkg;
+            Pkg.instantiate();
+            Pkg.Registry.add(RegistrySpec(url = "https://github.com/okatsn/OkRegistry.git"));
+            include("add_local_pkg_to_registry.jl");
+            '
+    # Update OkRegistry first.
+    # 1. Current path is critical. Please refer to "add_local_pkg_to_registry.jl" in OkRegistry.
+    # 2. `git config` is required, and has to be done in repo OkRegistry (cd OkRegistry must precede)
+    # 3. Personal registry is add per julia install; that is, OkRegistry should be added before `Pkg.instantiate()`
+  test:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          <<#VERSIONS>>
+          - '<<&.>>'
+          <</VERSIONS>>
+        os:
+          <<#OS>>
+          - <<&.>>
+          <</OS>>
+        arch:
+          <<#ARCH>>
+          - <<&.>>
+          <</ARCH>>
+        <<#HAS_EXCLUDES>>
+        exclude:
+        <</HAS_EXCLUDES>>
+        <<#EXCLUDES>>
+          - os: <<&E_OS>>
+            arch: <<&E_ARCH>>
+            <<#E_VERSION>>
+            version: '<<&E_VERSION>>'
+            <</E_VERSION>>
+        <</EXCLUDES>>
+    steps:
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
+      - uses: julia-actions/cache@v1
+      - run: |
+          julia --project=@. -e '
+            using Pkg;
+            Pkg.Registry.add(RegistrySpec(url = "https://github.com/okatsn/OkRegistry.git"))
+            '
+      # TODO: create a github action for adding OkRegistry
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-runtest@v1
+      <<#HAS_CODECOV>>
+      - uses: julia-actions/julia-processcoverage@v1
+      - uses: codecov/codecov-action@v2
+        with:
+          files: lcov.info
+      <</HAS_CODECOV>>
+      <<#HAS_COVERALLS>>
+      - uses: julia-actions/julia-uploadcoveralls@v1
+        env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+      <</HAS_COVERALLS>>
+  <<#HAS_DOCUMENTER>>
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+      - run: |
+          julia --project=@. -e '
+            using Pkg;
+            Pkg.Registry.add(RegistrySpec(url = "https://github.com/okatsn/OkRegistry.git"))
+            '
+      # TODO: create a github action for adding OkRegistry
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-docdeploy@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          julia --project=docs -e '
+            using Documenter: DocMeta, doctest
+            using <<&PKG>>
+            DocMeta.setdocmeta!(<<&PKG>>, :DocTestSetup, :(using <<&PKG>>); recursive=true)
+            doctest(<<&PKG>>)'
+  <</HAS_DOCUMENTER>>
