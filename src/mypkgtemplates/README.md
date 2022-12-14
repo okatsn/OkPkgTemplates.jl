@@ -17,7 +17,8 @@ See [`CITATION.bib`](CITATION.bib) for the relevant reference(s).
 
 ## Adding secrets
 !!! warning
-    You have to add `ACCESS_OKREGISTRY` to the secret under the remote repo (e.g., https://github.com/okatsn/{{{PKG}}}.jl)
+    - You have to add `ACCESS_OKREGISTRY` to the secret under the remote repo (e.g., https://github.com/okatsn/{{{PKG}}}.jl).
+    - `ACCESS_OKREGISTRY` allows `CI.yml` to automatically register/update this package to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry).
 
 ## Tips for connecting to remote
 Connect to remote:
