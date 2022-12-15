@@ -4,6 +4,7 @@ authors = ["okatsn <okatsn@gmail.com> and contributors"]
 version = "0.1.1"
 
 [deps]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 PkgTemplates = "14b8a8f1-9102-5b29-a752-f990bacb7fe1"
 
