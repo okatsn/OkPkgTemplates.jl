@@ -47,29 +47,29 @@ jobs:
       - uses: codecov/codecov-action@v2
         with:
           files: lcov.info
-  # docs:
-  #   name: Documentation
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: write
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: julia-actions/setup-julia@v1
-  #       with:
-  #         version: '1'
-  #     - run: |
-  #         julia --project=@. -e '
-  #           using Pkg;
-  #           Pkg.Registry.add(RegistrySpec(url = "https://github.com/okatsn/OkRegistry.git"))
-  #           '
-  #     # TODO: create a github action for adding OkRegistry
-  #     - uses: julia-actions/julia-buildpkg@v1
-  #     - uses: julia-actions/julia-docdeploy@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     - run: |
-  #         julia --project=docs -e '
-  #           using Documenter: DocMeta, doctest
-  #           using OkPkgTemplates
-  #           DocMeta.setdocmeta!(OkPkgTemplates, :DocTestSetup, :(using OkPkgTemplates); recursive=true)
-  #           doctest(OkPkgTemplates)'
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+      - run: |
+          julia --project=@. -e '
+            using Pkg;
+            Pkg.Registry.add(RegistrySpec(url = "https://github.com/okatsn/OkRegistry.git"))
+            '
+      # TODO: create a github action for adding OkRegistry
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-docdeploy@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          julia --project=docs -e '
+            using Documenter: DocMeta, doctest
+            using OkPkgTemplates
+            DocMeta.setdocmeta!(OkPkgTemplates, :DocTestSetup, :(using OkPkgTemplates); recursive=true)
+            doctest(OkPkgTemplates)'
