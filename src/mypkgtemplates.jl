@@ -3,7 +3,7 @@
 
 
 # # See PkgTemplates/src/plugin.jl
-const DEFAULT_TEMPLATE_DIR = Ref{String}(joinpath(dirname(pathof(OkPkgTemplates)), "mypkgtemplates")) # KEYNOTE: Check the package name and folder name if moved to other package
+const DEFAULT_TEMPLATE_DIR = Ref{String}(joinpath(dirname(dirname(pathof(OkPkgTemplates))), "mypkgtemplates")) # KEYNOTE: Check the package name and folder name if moved to other package
 """
 Return a path relative to the default template file directory
 (`Shorthands/mypkgtemplates`).
