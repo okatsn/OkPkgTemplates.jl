@@ -53,5 +53,4 @@ jobs:
           repository: ${{ github.repository }}
           event-type: trigger-tagbot
           token: ${{ secrets.GITHUB_TOKEN }}
-          # client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}' # `client-payload:` passes data from Workflow 1 to Workflow 2
-          # token: ${{ secrets.REPO_GHA_PAT }} #default is GITHUB_TOKEN
+          client-payload: '{"ref": "${{ github.ref }}", "commit_message": "${{ github.event.head_commit.message }}"}' # `client-payload:` passes data from Workflow 1 to Workflow 2
