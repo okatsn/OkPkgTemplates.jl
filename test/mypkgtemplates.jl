@@ -7,5 +7,9 @@ using Pkg
     @test isfile(mypkgtemplate_dir("README.md"))
     @test isfile(mypkgtemplate_dir("github", "workflows", "CI.yml"))
 
-    @test OkPkgTemplates.chkdest() == ENV["JULIA_PKG_DEVDIR"]
+    if haskey(ENV, "JULIA_PKG_DEVDIR")
+        @test OkPkgTemplates.chkdest() == ENV["JULIA_PKG_DEVDIR"]
+    end
+
+    @test OkPkgTemplates.chkdest() == Pkg.devdir()
 end
