@@ -1,9 +1,10 @@
 # # THIS IS USELESS AND SHOULD BE DELETED LATER since you cannot call GithubActions twice or assign variable to register.yml
 #
 # You have to set PAT and add secrete ACCESS_OKREGISTRY in the repo {{{PKG}}}
-# https://stevenmortimer.com/running-github-actions-sequentially/
 # see also the default template: https://github.com/JuliaCI/PkgTemplates.jl/blob/master/templates/github/workflows/register.yml
-
+# CHECKPOINT:
+# - <<#BRANCH>> and {{{PKG}}} replacement will fail using plugin PkgTemplates.RegisterAction in
+# - Continue with [Running GitHub Actions Sequentially](https://stevenmortimer.com/running-github-actions-sequentially/) to separate updateokreg out from CI.yml, and trigger TagBot sequentially.
 
 name: Register Package to OkRegistry
 on:
