@@ -54,4 +54,4 @@ jobs:
           event-type: trigger-tagbot
           token: ${{ secrets.GITHUB_TOKEN }}
           # client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}' # `client-payload:` passes data from Workflow 1 to Workflow 2
-          # token: ${{ secrets.REPO_GHA_PAT }} #default is GITHUB_TOKEN
+          # client_payload easily errored for obtaining multiline string (Error: Unexpected token T in JSON)
