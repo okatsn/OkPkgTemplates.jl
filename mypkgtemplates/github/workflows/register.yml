@@ -1,10 +1,6 @@
-# # THIS IS USELESS AND SHOULD BE DELETED LATER since you cannot call GithubActions twice or assign variable to register.yml
-#
 # You have to set PAT and add secrete ACCESS_OKREGISTRY in the repo {{{PKG}}}
 # see also the default template: https://github.com/JuliaCI/PkgTemplates.jl/blob/master/templates/github/workflows/register.yml
-# CHECKPOINT:
-# - <<#BRANCH>> and {{{PKG}}} replacement will fail using plugin PkgTemplates.RegisterAction in
-# - Continue with [Running GitHub Actions Sequentially](https://stevenmortimer.com/running-github-actions-sequentially/) to separate updateokreg out from CI.yml, and trigger TagBot sequentially.
+# Also see [Running GitHub Actions Sequentially](https://stevenmortimer.com/running-github-actions-sequentially/) to separate updateokreg out from CI.yml, and trigger TagBot sequentially.
 
 name: Register Package to OkRegistry
 on:
@@ -12,9 +8,8 @@ on:
     paths:
       - 'Project.toml'
     branches:
-    <<#BRANCH>>
-      - <<BRANCH>>
-    <</BRANCH>>
+      - main
+      - master
   issue_comment:
     types:
       - created
@@ -50,3 +45,12 @@ jobs:
     # 1. Current path is critical. Please refer to "add_local_pkg_to_registry.jl" in OkRegistry.
     # 2. `git config` is required, and has to be done in repo OkRegistry (cd OkRegistry must precede)
     # 3. Personal registry is add per julia install; that is, OkRegistry should be added before `Pkg.instantiate()`
+      - name: Trigger next workflow
+        if: success()
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          repository: ${{ github.repository }}
+          event-type: trigger-tagbot
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}' # `client-payload:` passes data from Workflow 1 to Workflow 2
+          # token: ${{ secrets.REPO_GHA_PAT }} #default is GITHUB_TOKEN
