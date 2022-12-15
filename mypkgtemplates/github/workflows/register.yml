@@ -1,6 +1,7 @@
 # You have to set PAT and add secrete ACCESS_OKREGISTRY in the repo {{{PKG}}}
 # see also the default template: https://github.com/JuliaCI/PkgTemplates.jl/blob/master/templates/github/workflows/register.yml
 # Also see [Running GitHub Actions Sequentially](https://stevenmortimer.com/running-github-actions-sequentially/) to separate updateokreg out from CI.yml, and trigger TagBot sequentially.
+# CHECKPOINT: Currently substitution (e.g., {{{PKG}}}) failed.
 
 name: Register Package to OkRegistry
 on:
@@ -24,7 +25,7 @@ jobs:
           version: 1.6.7
       - uses: actions/checkout@v3 # see https://github.com/actions/checkout
         with:
-          path: {{{PKG}}}
+          path: TEMP
       - uses: actions/checkout@v3 # see https://github.com/actions/checkout
         with:
           repository: okatsn/OkRegistry

@@ -37,3 +37,5 @@ PLUGIN_TEST() = Tests(; file=mypkgtemplate_dir("test","runtests.jl")) # see PkgT
 
 # see PkgTemplates/src/plugins/ci.jl
 PLUGIN_GITHUBACTION() = GitHubActions(;file = mypkgtemplate_dir("github", "workflows", "CI.yml"))
+
+PLUGIN_REGISTER() = RegisterAction(; file=mypkgtemplate_dir("github", "workflows", "register.yml"))

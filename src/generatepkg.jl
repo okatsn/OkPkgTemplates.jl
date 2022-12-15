@@ -48,7 +48,8 @@ macro genpkg(yourpkgname::String)
             Documenter{GitHubActions}(),
             PLUGIN_README(),
             PLUGIN_TAGBOT(),
-            PLUGIN_TEST()
+            PLUGIN_TEST(),
+            PLUGIN_REGISTER()
         ],
         )
         default_readme_var = PkgTemplates.view(PLUGIN_README(),t,$yourpkgname)
@@ -59,11 +60,17 @@ macro genpkg(yourpkgname::String)
             return default_readme_var
         end
 
+        reg_var = Dict("PKG" => $yourpkgname)
+        function PkgTemplates.user_view(::RegisterAction,::Template, ::AbstractString)
+            return reg_var
+        end
+
         t($yourpkgname)
 
         disp_info1()
         info_template_var_return(
-            "PLUGIN_README" => default_readme_var,)
+            "PLUGIN_README" => default_readme_var,
+            "PLUGIN_REGISTER" => reg_var)
 
     end
 end
