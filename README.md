@@ -10,6 +10,9 @@
 Please read `README.md` of the generated package for further instructions to complete the workflow setting.
 
 
+## Compatibility
+`OkPkgTemplates` is compatible to `PkgTemplates` of this commit: https://github.com/JuliaCI/PkgTemplates.jl/commit/0de5d855e050d93169f8661a13b3a53a8cb2b283 or [v0.7.29](https://github.com/JuliaCI/PkgTemplates.jl/releases/tag/v0.7.29)
+
 ## TODO: Hints for Documenter
 
 In `docs/make.jl`, add pages for example:
