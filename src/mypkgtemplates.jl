@@ -11,14 +11,15 @@ Return a path relative to the default template file directory
 mypkgtemplate_dir(paths::AbstractString...) = joinpath(DEFAULT_TEMPLATE_DIR[], paths...)
 
 """
-`chkdest(destination)` return `Pkg.devdir()` if `destination` is empty.
+`chkdest()` return `Pkg.devdir()` if `DEFAULT_DESTINATION()` is empty.
 """
-function chkdest(destination)
-    if isempty(destination)
-        destination = Pkg.devdir()
-    end
-    return destination
+function chkdest()
+    ifelse(
+        isempty(DEFAULT_DESTINATION()),
+            Pkg.devdir(),
+            DEFAULT_DESTINATION())
 end
+
 
 
 function template_001(; destination="", julia_ver = v"1.6", username="okatsn")

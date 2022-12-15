@@ -4,6 +4,8 @@ module OkPkgTemplates
 using PkgTemplates, Pkg, Dates
 include("myplugins.jl")
 include("mypkgtemplates.jl")
+include("mydefaults.jl")
+
 
 export ok_pkg_template
 export mypkgtemplate_dir
@@ -14,6 +16,6 @@ include("informing.jl")
 export info_template_var_return
 
 include("generatepkg.jl")
-export @gen_pkg
+export @genpkg
 
 end
