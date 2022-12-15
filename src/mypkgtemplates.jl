@@ -29,12 +29,12 @@ function template_001(; destination="", julia_ver = v"1.6", username="okatsn")
     julia=julia_ver,
     plugins=[
         Git(; manifest=false),
-        PLUGIN_GITHUBACTION,
+        PLUGIN_GITHUBACTION(),
         Codecov(), # https://about.codecov.io/
         Documenter{GitHubActions}(),
-        PLUGIN_README,
-        PLUGIN_TAGBOT,
-        PLUGIN_TEST
+        PLUGIN_README(),
+        PLUGIN_TAGBOT(),
+        PLUGIN_TEST()
     ],
 
     ) # https://www.juliabloggers.com/tips-and-tricks-to-register-your-first-julia-package/

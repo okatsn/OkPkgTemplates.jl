@@ -1,12 +1,12 @@
 # Readme
 # - see also PkgTemplates/src/plugins/readme.jl
-const PLUGIN_README = PkgTemplates.Readme(; file=mypkgtemplate_dir("README.md"), destination="README.md")
+PLUGIN_README() = PkgTemplates.Readme(; file=mypkgtemplate_dir("README.md"), destination="README.md")
 
 # TagBot
 # - see PkgTemplates/src/plugins/tagbot.jl
 # - `changelog` is modified from [default changelog template](https://github.com/JuliaRegistries/TagBot/blob/master/action.yml) with extra `${{github.event.head_commit.message}}` (for get the commit message).
 # - If your registry is public, this is all you need to do. For more information, see [here](https://github.com/JuliaRegistries/TagBot#custom-registries)
-const PLUGIN_TAGBOT = TagBot(;registry="okatsn/OkRegistry",
+PLUGIN_TAGBOT() = TagBot(;registry="okatsn/OkRegistry",
         changelog = """
         ## {{ package }} {{ version }}
         \${{github.event.head_commit.message}}
@@ -32,8 +32,8 @@ const PLUGIN_TAGBOT = TagBot(;registry="okatsn/OkRegistry",
         file = mypkgtemplate_dir("github", "workflows", "TagBot.yml"))
 
 # Test
-const PLUGIN_TEST = Tests(; file=mypkgtemplate_dir("test","runtests.jl")) # see PkgTemplates/src/plugins/tests.jl
+PLUGIN_TEST() = Tests(; file=mypkgtemplate_dir("test","runtests.jl")) # see PkgTemplates/src/plugins/tests.jl
 
 
 # see PkgTemplates/src/plugins/ci.jl
-const PLUGIN_GITHUBACTION = GitHubActions(;file = mypkgtemplate_dir("github", "workflows", "CI.yml"))
+PLUGIN_GITHUBACTION() = GitHubActions(;file = mypkgtemplate_dir("github", "workflows", "CI.yml"))
