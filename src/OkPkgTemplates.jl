@@ -9,6 +9,11 @@ export ok_pkg_template
 export mypkgtemplate_dir
 # export PLUGIN_README(), PLUGIN_TAGBOT(), PLUGIN_TEST()
 
+using Markdown
+include("informing.jl")
+export info_template_var_return
+
 include("generatepkg.jl")
 export @gen_pkg
+
 end
