@@ -41,14 +41,6 @@ function template_001(; destination="", julia_ver = v"1.6", username="okatsn")
 end
 
 
-# function OkPkgTemplates.user_view(::Readme, ::Template, yourpkgname::AbstractString)
-#     # default_readme_var = PkgTemplates.view(PLUGIN_README,t,yourpkgname)
-#     Dict(
-#         "TODAY" => "today",
-#     )
-# end
-
-
 """
 `ok_pkg_template(yourpkgname::String; destination="", julia_ver = v"1.6", username="okatsn")` is
 a quick package creater that does
