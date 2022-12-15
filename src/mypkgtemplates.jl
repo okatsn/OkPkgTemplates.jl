@@ -77,5 +77,5 @@ function ok_pkg_template(yourpkgname::String; destination="", julia_ver = v"1.6"
 
 
     t(yourpkgname) # create template
-
+    @info "Please read `README.md` for completing the set-up of CI"
 end
