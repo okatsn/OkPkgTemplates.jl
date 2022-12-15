@@ -6,5 +6,6 @@ using Pkg
     @test isfile(mypkgtemplate_dir("test","runtests.jl"))
     @test isfile(mypkgtemplate_dir("README.md"))
     @test isfile(mypkgtemplate_dir("github", "workflows", "CI.yml"))
-    @test chkdest() == ENV("JULIA_PKG_DEVDIR")
+
+    @test OkPkgTemplates.chkdest() == ENV["JULIA_PKG_DEVDIR"]
 end
