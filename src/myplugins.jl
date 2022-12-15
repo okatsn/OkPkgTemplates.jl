@@ -33,3 +33,7 @@ const PLUGIN_TAGBOT = TagBot(;registry="okatsn/OkRegistry",
 
 # Test
 const PLUGIN_TEST = Tests(; file=mypkgtemplate_dir("test","runtests.jl")) # see PkgTemplates/src/plugins/tests.jl
+
+
+# see PkgTemplates/src/plugins/ci.jl
+const PLUGIN_GITHUBACTION = GitHubActions(;file = mypkgtemplate_dir("github", "workflows", "CI.yml"))

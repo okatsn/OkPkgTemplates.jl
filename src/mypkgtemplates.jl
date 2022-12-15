@@ -10,20 +10,26 @@ Return a path relative to the default template file directory
 """
 mypkgtemplate_dir(paths::AbstractString...) = joinpath(DEFAULT_TEMPLATE_DIR[], paths...)
 
-
-
-
-function template_001(; destination="", julia_ver = v"1.6", username="okatsn")
+"""
+`chkdest(destination)` return `Pkg.devdir()` if `destination` is empty.
+"""
+function chkdest(destination)
     if isempty(destination)
         destination = Pkg.devdir()
     end
+    return destination
+end
+
+
+function template_001(; destination="", julia_ver = v"1.6", username="okatsn")
+
     Template(;
     user=username,
-    dir=destination,
+    dir=chkdest(destination),
     julia=julia_ver,
     plugins=[
         Git(; manifest=false),
-        GitHubActions(;file = mypkgtemplate_dir("github", "workflows", "CI.yml")), # see PkgTemplates/src/plugins/ci.jl
+        PLUGIN_GITHUBACTION,
         Codecov(), # https://about.codecov.io/
         Documenter{GitHubActions}(),
         PLUGIN_README,
