@@ -9,7 +9,7 @@ PLUGIN_README() = PkgTemplates.Readme(; file=mypkgtemplate_dir("README.md"), des
 PLUGIN_TAGBOT() = TagBot(;registry="okatsn/OkRegistry",
         changelog = """
         ## {{ package }} {{ version }}
-        \${{github.event.head_commit.message}}
+        \${{ github.event.head_commit.message }}
         {% if previous_release %}
         [Diff since {{ previous_release }}]({{ compare_url }})
         {% endif %}
