@@ -5,21 +5,12 @@
 [![Build Status](https://github.com/okatsn/OkPkgTemplates.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/okatsn/OkPkgTemplates.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/okatsn/OkPkgTemplates.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/okatsn/OkPkgTemplates.jl)
 
-!!! note
-    This is a julia package created using `okatsn`'s preference, and this package is expected to be registered to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) for CIs to work properly.
+`OkPkgTemplates` initiate julia package with CI presets that automate test, release tag, documentation and registry management **based on** [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) with my personal preferences.
 
-## Tips for connecting to remote
-Connect to remote:
-1. Switch to the local directory of this project (OkPkgTemplates)
-2. Add an empty repo OkPkgTemplates(.jl) on github (without anything!)
-3. `git push origin main`
-- It can be quite tricky, see https://discourse.julialang.org/t/upload-new-package-to-github/56783
-More reading
-Pkg's Artifact that manage an external dataset as a package
-- https://pkgdocs.julialang.org/v1/artifacts/
-- a provider for reposit data: https://github.com/sdobber/FA_data
+Please read `README.md` of the generated package for further instructions to complete the workflow setting.
 
-## Hints for Documenter
+
+## TODO: Hints for Documenter
 
 In `docs/make.jl`, add pages for example:
 ```julia

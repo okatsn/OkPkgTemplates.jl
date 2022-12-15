@@ -67,5 +67,5 @@ function ok_pkg_template(yourpkgname::String; kwargs...)
 
     # # Set up variables
     t(yourpkgname) # create template
-
+    @info "Please read `README.md` for completing the set-up of CI"
 end
