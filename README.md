@@ -13,6 +13,27 @@ Please read `README.md` of the generated package for further instructions to com
 ## Compatibility
 `OkPkgTemplates` is compatible to `PkgTemplates` of this commit: https://github.com/JuliaCI/PkgTemplates.jl/commit/0de5d855e050d93169f8661a13b3a53a8cb2b283 or [v0.7.29](https://github.com/JuliaCI/PkgTemplates.jl/releases/tag/v0.7.29)
 
+
+## TODO: TagBot Error
+### Known issue
+Seemingly, TagBot is designed to be interrupted in the process of scanning sequentially the existent tags until `Error: TagBot experienced an unexpected internal failure`.
+However, in many of my packages it experience this error at a much earlier stage that no further version can be tagged anymore, this is not what I desired.
+
+The detail of the internal failure above is like:
+```
+raise self.__createException(status, responseHeaders, output)
+github.GithubException.GithubException: 403 {"message": "Resource not accessible by integration", "documentation_url": "https://docs.github.com/rest/reference/git#create-a-reference"}
+```
+
+Excluded possible causes for this error:
+- The `${{ github.event.head_commit.message }}` in the changelog template: I delete them in `Shorthands` and `OkPkgTemplates`'s `Tagbot.yml`. But the problem remains.
+- The broken of `OkRegistry`: Seemingly no problem in `OkRegistry`. It is OK to make your registry as a Package (as [HolyLabRegistry](https://github.com/HolyLab/HolyLabRegistry)). Furthermore, for example, in `OkPkgTemplates` there is no inconsistency of version numbering, problem still occurred.
+
+It seems to be an issue of permissions that may occur in many cases, see the threads:
+- https://discourse.julialang.org/t/tagbot-unexpected-internal-error/74680/3
+- https://discourse.julialang.org/t/tagbot-github-action-runs-successfully-but-a-new-release-does-not-show-up-on-github-releases/80770
+- https://github.com/JuliaRegistries/TagBot/issues/242
+
 ## TODO: Hints for Documenter
 
 In `docs/make.jl`, add pages for example:
