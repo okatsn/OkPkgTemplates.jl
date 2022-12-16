@@ -41,6 +41,43 @@ Warning: No registry pull request was found for this version
 Error: TagBot experienced an unexpected internal failure
 ```
 
+### Setting `custom` for the changelog template
+Seemingly you cannot do this.
+
+In [julia-tagbot#changelogs](https://github.com/marketplace/actions/julia-tagbot#changelogs), for the changelog template
+```json
+...
+    ...
+        with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        changelog: |
+            This is release {{ version }} of {{ package }}.
+            {% if custom %}
+            Here are my release notes!
+            {{ custom }}
+            {% endif %}
+```
+where "The data available to you looks like this:"
+```json
+{
+  "compare_url": "https://github.com/Owner/Repo/compare/previous_version...current_version (or null for first release)",
+  "custom": "your custom release notes",
+  "package": "PackageName",
+  "previous_release": "v1.1.2 (or null for first release)",
+  // Go to julia-tagbot#changelogs to see all available variables
+}
+```
+is not what you can explicitly set. 
+
+The variable `custom` is defined when you use `PkgDev.tag("YourPackage", v"0.2.6"; release_notes="Trying release note")`, for example, as mentioned in TagBot's Readme. 
+As you dig into the source code of `PkgDev`, you will find the variable `release_notes` eventually goes into `GitHub.create_pull_request(...)` (see [tag.jl](https://github.com/JuliaLang/PkgDev.jl/blob/ffc464b068cee8604083804e757103771510fbce/src/tag.jl)).
+
+That is, you can only have your final changelog templated with these existing variable, through for example `{{ package }}of version {{ version }} after {{ previous_release }}`; noted that this is a [Jinja](https://routebythescript.com/using-yaml-and-jinja-to-create-network-configurations/) templating (no evaluation `$` sign of [Github Actions - Expression](https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/expressions)).
+That is, it is useless to solely set environment variable (e.g., `env: custom: "My message..."`) in your YAML; you have to also add evaluation sign but in this way you can easily break the changelog generating process since the variable itself might contain something that violates the templating rules.
+
+In conclusion, TagBot is Pull-Request based that you can only manipulate the changelog with information captured from pull-request or issues.
+
+
 ### TODO/CHECKPOINT
 
 - Manually tag all versions that TagBot can skip.
