@@ -14,7 +14,7 @@ Please read `README.md` of the generated package for further instructions to com
 `OkPkgTemplates` is compatible to `PkgTemplates` of this commit: https://github.com/JuliaCI/PkgTemplates.jl/commit/0de5d855e050d93169f8661a13b3a53a8cb2b283 or [v0.7.29](https://github.com/JuliaCI/PkgTemplates.jl/releases/tag/v0.7.29)
 
 
-## TODO: TagBot Error
+## TagBot Error
 ### Known issue
 Seemingly, TagBot is designed to be interrupted in the process of scanning sequentially the existent tags until `Error: TagBot experienced an unexpected internal failure`.
 However, in many of my packages it experience this error at a much earlier stage that no further version can be tagged anymore, this is not what I desired.
@@ -33,6 +33,19 @@ It seems to be an issue of permissions that may occur in many cases, see the thr
 - https://discourse.julialang.org/t/tagbot-unexpected-internal-error/74680/3
 - https://discourse.julialang.org/t/tagbot-github-action-runs-successfully-but-a-new-release-does-not-show-up-on-github-releases/80770
 - https://github.com/JuliaRegistries/TagBot/issues/242
+
+The problem seemingly always occur in the changelog generating stage, e.g., 
+```
+Generating changelog for version v0.2.3 (1281cdccbc33566fce239fbcd098797144020d98)
+Warning: No registry pull request was found for this version
+Error: TagBot experienced an unexpected internal failure
+```
+
+### TODO/CHECKPOINT
+
+- Manually tag all versions that TagBot can skip.
+- You have to figure out the formal way to provide custom message in the changelog template. Even if `${{ github.event.head_commit.message }}` deleted problem still remains, it very likely be the cause. As in the previous `client-payload:` test, `Error: Unexpected token T in JSON` occurred in saving the committed message (https://github.com/okatsn/OkPkgTemplates.jl/actions/runs/3702434045/jobs/6272709943#step:6:12).
+
 
 ## TODO: Hints for Documenter
 
