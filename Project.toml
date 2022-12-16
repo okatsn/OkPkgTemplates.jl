@@ -1,7 +1,7 @@
 name = "OkPkgTemplates"
 uuid = "38290ba8-8fbe-457b-bf75-0e4980da3840"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.2.7"
+version = "0.2.8"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
