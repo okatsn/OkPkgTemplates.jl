@@ -33,7 +33,7 @@ and then generate the Package
 """
 macro genpkg(yourpkgname::String)
     dest = chkdest()
-    @info "Targeting: $dest"
+    @info "Targeting: $(joinpath(dest, yourpkgname))"
     return quote
         @assert $dest == chkdest()
         t = Template(;
