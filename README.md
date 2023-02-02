@@ -150,4 +150,7 @@ In which,
     , which is intended to generate docstrings for instances (functions, macros, structs...) defined in all `.jl` files in the directory "mymodels".
     However, since the docstrings for an instance cannot be `@autodocs` twice, the corresponding `@autodocs` block in the page `"Model 2" => "models/model2.md"` will be empty.
 
-For more information, see [this](https://documenter.juliadocs.org/stable/man/guide/#Adding-Some-Docstrings)
+For more information, see [this](https://documenter.juliadocs.org/stable/man/guide/#Adding-Some-Docstrings).
+
+# TODOs
+- include this README in https://okatsn.github.io/OkPkgTemplates.jl/

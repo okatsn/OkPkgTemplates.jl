@@ -11,9 +11,12 @@ This is a julia package created using `okatsn`'s preference, and this package is
 
 !!! note Checklist
     - [ ] `pkg> add Documenter` to make doc tests work, or delete `using Documenter; @testset "DocTests" begin ...` in `test/runtests.jl`. See [Doc Test](#doc-test).
-    - [ ] Add `ACCESS_OKREGISTRY` secret in the settings of this repository on Github, or delete both `register.yml` and `TagBot.yml` in `/.github/workflows/`.
+    - [ ] Add `ACCESS_OKREGISTRY` secret in the settings of this repository on Github, or delete both `register.yml` and `TagBot.yml` in `/.github/workflows/`. See [Auto-Registration](#auto-registration).
     - [ ] Create an empty repository (namely, `https://github.com/okatsn/{{{PKG}}}.jl.git`) on github, and push the local to origin. See [connecting to remote](#tips-for-connecting-to-remote).
 
+## Go to [OkPkgTemplates](https://github.com/okatsn/OkPkgTemplates.jl) for more information
+- [How TagBot works and trouble shooting](https://github.com/okatsn/OkPkgTemplates.jl#tagbot)
+- [Use of Documenter](https://github.com/okatsn/OkPkgTemplates.jl#use-of-documenter)
 
 ## Citing
 
