@@ -39,3 +39,9 @@ PLUGIN_TEST() = Tests(; file=mypkgtemplate_dir("test","runtests.jl")) # see PkgT
 PLUGIN_GITHUBACTION() = GitHubActions(;file = mypkgtemplate_dir("github", "workflows", "CI.yml"))
 
 PLUGIN_REGISTER() = RegisterAction(; file=mypkgtemplate_dir("github", "workflows", "register.yml"))
+
+
+PLUGIN_COMPATHELPER() = CompatHelper(;
+    file=mypkgtemplate_dir("github", "workflows", "CompatHelper.yml"),
+    cron="0 0 * * *",
+    ) # See for configuration: https://juliaregistries.github.io/CompatHelper.jl/stable/options/

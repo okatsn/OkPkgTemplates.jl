@@ -14,37 +14,43 @@ Please read `README.md` of the generated package for further instructions to com
 `OkPkgTemplates` is compatible to `PkgTemplates` of this commit: https://github.com/JuliaCI/PkgTemplates.jl/commit/0de5d855e050d93169f8661a13b3a53a8cb2b283 or [v0.7.29](https://github.com/JuliaCI/PkgTemplates.jl/releases/tag/v0.7.29)
 
 
-## TagBot Error
-### Known issue
-Seemingly, TagBot is designed to be interrupted in the process of scanning sequentially the existent tags until `Error: TagBot experienced an unexpected internal failure`.
-However, in many of my packages it experience this error at a much earlier stage that no further version can be tagged anymore, this is not what I desired.
+## TagBot
+### Resources for trouble shooting
+- https://discourse.julialang.org/t/tagbot-unexpected-internal-error/74680/3
+- https://discourse.julialang.org/t/tagbot-github-action-runs-successfully-but-a-new-release-does-not-show-up-on-github-releases/80770
+- https://github.com/JuliaRegistries/TagBot/issues/242
 
-The detail of the internal failure above is like:
+
+### TagBot is designed to stop at failure
+Seemingly, TagBot is designed to be interrupted in the process of scanning sequentially the existent tags until `Error: TagBot experienced an unexpected internal failure`. In some cases, it experience this error at a much earlier stage that no further version can be tagged anymore.
+
+For example, in the case I modify the `TagBot.yml` for the attempt to include commit message as the release note by adding `${{ github.event.head_commit.message }}` in the `changelog` template as the input for the TagBot action, the internal failure will occurred if the tagbot does not triggered and run successfully exactly at that commit. The error is as followings:  
 ```
 raise self.__createException(status, responseHeaders, output)
 github.GithubException.GithubException: 403 {"message": "Resource not accessible by integration", "documentation_url": "https://docs.github.com/rest/reference/git#create-a-reference"}
 ```
 
-Excluded possible causes for this error:
-- The `${{ github.event.head_commit.message }}` in the changelog template: I delete them in `Shorthands` and `OkPkgTemplates`'s `Tagbot.yml`. But the problem remains.
-- The broken of `OkRegistry`: Seemingly no problem in `OkRegistry`. It is OK to make your registry as a Package (as [HolyLabRegistry](https://github.com/HolyLab/HolyLabRegistry)). Furthermore, for example, in `OkPkgTemplates` there is no inconsistency of version numbering, problem still occurred.
-
-It seems to be an issue of permissions that may occur in many cases, see the threads:
-- https://discourse.julialang.org/t/tagbot-unexpected-internal-error/74680/3
-- https://discourse.julialang.org/t/tagbot-github-action-runs-successfully-but-a-new-release-does-not-show-up-on-github-releases/80770
-- https://github.com/JuliaRegistries/TagBot/issues/242
-
-The problem seemingly always occur in the changelog generating stage, e.g., 
+And it is found that the problem always occur in the changelog generating stage for this example, because `github.event.head_commit.message` is not accessible. 
 ```
 Generating changelog for version v0.2.3 (1281cdccbc33566fce239fbcd098797144020d98)
 Warning: No registry pull request was found for this version
 Error: TagBot experienced an unexpected internal failure
 ```
 
-### Setting `custom` for the changelog template
-Seemingly you cannot do this.
+The Action that includes the commit message will always fail if it is triggered by other action.
+This is because beyond that commit (starting a new machine), `github.event.head_commit.message` does not exist anymore.
 
-In [julia-tagbot#changelogs](https://github.com/marketplace/actions/julia-tagbot#changelogs), for the changelog template
+!!! note
+    Once it experienced this kind of error in the history, further tagging will never be reached EVEN IF you fixed your `TagBot.yml`. To deal with this problem, just manually tag on all commits that should be tagged correctly, and TagBot can go further from the last tag.
+
+
+
+
+
+
+### What is the variable `custom` in the `changelog` template?
+You cannot define the variable `custom` for the `changelog` template in your repository.
+As referred in [julia-tagbot#changelogs](https://github.com/marketplace/actions/julia-tagbot#changelogs), for the changelog template
 ```json
 ...
     ...
@@ -69,8 +75,8 @@ where "The data available to you looks like this:"
 ```
 is not what you can explicitly set. 
 
-The variable `custom` is defined when you use `PkgDev.tag("YourPackage", v"0.2.6"; release_notes="Trying release note")`, for example, as mentioned in TagBot's Readme. 
-As you dig into the source code of `PkgDev`, you will find the variable `release_notes` eventually goes into `GitHub.create_pull_request(...)` (see [tag.jl](https://github.com/JuliaLang/PkgDev.jl/blob/ffc464b068cee8604083804e757103771510fbce/src/tag.jl)).
+However, the variable `custom` can be defined when you use `PkgDev.tag("YourPackage", v"0.2.6"; release_notes="Trying release note")`, for example, as mentioned in TagBot's Readme. 
+As you dig into the source code of `PkgDev`, you will find the variable `release_notes` eventually goes into `GitHub.create_pull_request(...)` as the `:body` entry (see [tag.jl](https://github.com/JuliaLang/PkgDev.jl/blob/ffc464b068cee8604083804e757103771510fbce/src/tag.jl)).
 
 That is, you can only have your final changelog templated with these existing variable, through for example `{{ package }}of version {{ version }} after {{ previous_release }}`; noted that this is a [Jinja](https://routebythescript.com/using-yaml-and-jinja-to-create-network-configurations/) templating (no evaluation `$` sign of [Github Actions - Expression](https://docs.github.com/en/enterprise-cloud@latest/actions/learn-github-actions/expressions)).
 That is, it is useless to solely set environment variable (e.g., `env: custom: "My message..."`) in your YAML; you have to also add evaluation sign but in this way you can easily break the changelog generating process since the variable itself might contain something that violates the templating rules.

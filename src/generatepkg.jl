@@ -33,7 +33,7 @@ and then generate the Package
 """
 macro genpkg(yourpkgname::String)
     dest = chkdest()
-    @info "Targeting: $dest"
+    @info "Targeting: $(joinpath(dest, yourpkgname))"
     return quote
         @assert $dest == chkdest()
         t = Template(;
@@ -42,7 +42,7 @@ macro genpkg(yourpkgname::String)
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),
-            CompatHelper(),
+            PLUGIN_COMPATHELPER(),
             PLUGIN_GITHUBACTION(),
             Codecov(), # https://about.codecov.io/
             Documenter{GitHubActions}(),
