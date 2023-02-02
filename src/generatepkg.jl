@@ -2,7 +2,7 @@
 `pkgtemplating_script(dest, yourpkgname)` returns the script (`quote ... end`) to be executed at the scope that the macro is called.
 """
 pkgtemplating_script(dest, yourpkgname) = quote
-    @assert $dest == chkdest()
+    @assert ifelse(isnothing($dest), true, $dest == chkdest())
     t = Template(;
     user=DEFAULT_USERNAME(),
     dir=chkdest(),
@@ -88,10 +88,15 @@ macro upactions()
     pwd1 = ENV["PWD"]
     tempdir = joinpath(pwd1, yourpkgname)
     @info "Update CI actions in $pwd1; temporary working directory is $yourpkgname"
-    dest = chkdest()
-    script_to_exe = pkgtemplating_script(dest, tempdir)
+    script_to_exe = pkgtemplating_script(nothing, tempdir)
+    srcdir = joinpath(tempdir, ".github", "workflows")
+    dstdir = joinpaht(pwd1, ".github", "workflows")
+    githubfiles = readdir(srcdir); # todo: consider use OkFiles to use regular expression to copy only the yml
+    srcs = joinpath.(srcdir, githubfiles)
+    dsts = joinpath.(dstdir, githubfiles)
     return quote
         $script_to_exe;
+        cp.(srcs, dsts; force=true)
         rm($tempdir, recursive=true)
     end
 end
