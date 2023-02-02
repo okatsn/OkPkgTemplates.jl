@@ -9,6 +9,9 @@
 You can fork this repository and replace `okatsn/OkRegistry` and its path by your own.
 
 ## Basic use
+`@genpkg "NewPackage"` and `@upactions` generate/update files base on the information of your current julia environment at one click. By default `@genpkg` generate your `NewPackage` in `JULIA_PKG_DEVDIR` (environment variable for your path for `Pkg.dev`).
+
+For more information, see
 - `help?> @genpkg` to see how to create a new package with this template.
 - `help?> @upactions` to see how to update files in `.github/workflows` at one click once your package is already created.
 
