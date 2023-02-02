@@ -42,7 +42,7 @@ macro genpkg(yourpkgname::String)
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),
-            CompatHelper(),
+            PLUGIN_COMPATHELPER(),
             PLUGIN_GITHUBACTION(),
             Codecov(), # https://about.codecov.io/
             Documenter{GitHubActions}(),
