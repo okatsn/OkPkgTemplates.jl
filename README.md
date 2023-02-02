@@ -5,9 +5,15 @@
 [![Build Status](https://github.com/okatsn/OkPkgTemplates.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/okatsn/OkPkgTemplates.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/okatsn/OkPkgTemplates.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/okatsn/OkPkgTemplates.jl)
 
-`OkPkgTemplates` initiate julia package with CI presets that automate test, release tag, documentation and registry management **based on** [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) with my personal preferences.
+`OkPkgTemplates` initiate julia package with CI presets that automate test, release tag, documentation and registry management **based on** [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) with my personal preferences. 
+You can fork this repository and replace `okatsn/OkRegistry` and its path by your own.
 
-Please read `README.md` of the generated package for further instructions to complete the workflow setting.
+## Basic use
+- `help?> @genpkg` to see how to create a new package with this template.
+- `help?> @upactions` to see how to update files in `.github/workflows` at one click once your package is already created.
+
+
+Please also read `README.md` of the generated package for further instructions to complete the workflow setting.
 
 
 ## Compatibility
@@ -15,12 +21,6 @@ Please read `README.md` of the generated package for further instructions to com
 
 
 ## TagBot
-### Resources for trouble shooting
-- https://discourse.julialang.org/t/tagbot-unexpected-internal-error/74680/3
-- https://discourse.julialang.org/t/tagbot-github-action-runs-successfully-but-a-new-release-does-not-show-up-on-github-releases/80770
-- https://github.com/JuliaRegistries/TagBot/issues/242
-
-
 ### TagBot is designed to stop at failure
 Seemingly, TagBot is designed to be interrupted in the process of scanning sequentially the existent tags until `Error: TagBot experienced an unexpected internal failure`. In some cases, it experience this error at a much earlier stage that no further version can be tagged anymore.
 
@@ -40,9 +40,20 @@ Error: TagBot experienced an unexpected internal failure
 The Action that includes the commit message will always fail if it is triggered by other action.
 This is because beyond that commit (starting a new machine), `github.event.head_commit.message` does not exist anymore.
 
-!!! note
-    Once it experienced this kind of error in the history, further tagging will never be reached EVEN IF you fixed your `TagBot.yml`. To deal with this problem, just manually tag on all commits that should be tagged correctly, and TagBot can go further from the last tag.
 
+### Trouble shooting
+Once it experienced this kind of error in the history, further tagging will never be reached EVEN IF you fixed your `TagBot.yml`. To deal with this problem, just manually tag on all commits that should be tagged correctly, and TagBot can go further from the last tag.
+
+Manually add tags correctly may solve many problems:
+1. Go to Github Actions of the repo, click TagBot to see at what version it stuck.
+2. Go to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) to get the git-tree-sha1 of the version where it always failed.
+3. Convert `git-tree-sha1` to commit hash in bash: `git log --pretty=raw | grep -B 1 <git-tree-sha1>` (no `<` and `>`).
+4. In Git Graph, add tag at that commit hash.
+
+
+- https://discourse.julialang.org/t/tagbot-unexpected-internal-error/74680/3
+- https://discourse.julialang.org/t/tagbot-github-action-runs-successfully-but-a-new-release-does-not-show-up-on-github-releases/80770
+- https://github.com/JuliaRegistries/TagBot/issues/242
 
 
 
@@ -68,7 +79,7 @@ where "The data available to you looks like this:"
 {
   "compare_url": "https://github.com/Owner/Repo/compare/previous_version...current_version (or null for first release)",
   "custom": "your custom release notes",
-  "package": "PackageName",
+  "package": "YourPackage",
   "previous_release": "v1.1.2 (or null for first release)",
   // Go to julia-tagbot#changelogs to see all available variables
 }
@@ -84,13 +95,8 @@ That is, it is useless to solely set environment variable (e.g., `env: custom: "
 In conclusion, TagBot is Pull-Request based that you can only manipulate the changelog with information captured from pull-request or issues.
 
 
-### TODO/CHECKPOINT
+## Use of Documenter
 
-- Manually tag all versions that TagBot can skip.
-- You have to figure out the formal way to provide custom message in the changelog template. Even if `${{ github.event.head_commit.message }}` deleted problem still remains, it very likely be the cause. As in the previous `client-payload:` test, `Error: Unexpected token T in JSON` occurred in saving the committed message (https://github.com/okatsn/OkPkgTemplates.jl/actions/runs/3702434045/jobs/6272709943#step:6:12).
-
-
-## TODO: Hints for Documenter
 
 In `docs/make.jl`, add pages for example:
 ```julia
@@ -121,24 +127,24 @@ In which,
 !!! note
     - If error occurred in generating the page, try the followings in your local machine:
     ```julia
-    makedocs(root=joinpath(dirname(pathof(OkPkgTemplates)), "..", "docs"), sitename="TEMP")
+    makedocs(root=joinpath(dirname(pathof(YourPackage)), "..", "docs"), sitename="TEMP")
     ```
-    - Use `dirname(pathof(OkPkgTemplates))` to locate `OkPkgTemplates/src`!
+    - Use `dirname(pathof(YourPackage))` to locate `YourPackage/src`!
 
 !!! warning for  `@autodocs`:
     Noted that you cannot generate duplicate doc strings with `@autodocs`, with later ones all ignored with warning messages. For example:
     In `index.md`, I have `@autodocs` block:
     ```@autodocs
-    Modules = [SWCForecast]
+    Modules = [YourPackage]
     Order   = [:function, :type]
     ```
-    , which generates docstrings for ALL instances under `SWCForecast`.
+    , which generates docstrings for ALL instances under `YourPackage`.
     After that, in `"models/model2.md"`, I have `@autodocs` block:
     ```@autodocs
-    Modules = [SWCForecast]
+    Modules = [YourPackage]
     Order   = [:function, :type]
-    using FileTools, SWCForecast
-    Pages = filelist(r".+\.jl", joinpath(dirname(pathof(SWCForecast)),"mymodels"); join=false)
+    using FileTools, YourPackage
+    Pages = filelist(r".+\.jl", joinpath(dirname(pathof(YourPackage)),"mymodels"); join=false)
     # which might be `Pages = [model2.jl, model2a.jl]` in the directory "mymodels", for example
     ```
     , which is intended to generate docstrings for instances (functions, macros, structs...) defined in all `.jl` files in the directory "mymodels".
