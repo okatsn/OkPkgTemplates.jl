@@ -84,9 +84,14 @@ end
 
 
 macro upactions()
+    yourpkgname = "TEMPR_$(Random.randstring(10))"
     pwd1 = ENV["PWD"]
-    @info "Update CI actions in $pwd1"
+    tempdir = joinpath(pwd1, yourpkgname)
+    @info "Update CI actions in $pwd1; temporary working directory is $yourpkgname"
+    dest = chkdest()
+    script_to_exe = pkgtemplating_script(dest, tempdir)
     return quote
-        $pwd1
+        $script_to_exe;
+        rm($tempdir, recursive=true)
     end
 end
