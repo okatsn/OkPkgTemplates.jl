@@ -80,8 +80,12 @@ macro genpkg(yourpkgname::String)
     return script_to_exe
 end
 
+"""
+Replace Github Actions (all the files in `.github/workflows`) with the latest version that generated from `OkPkgTemplates`. Noted that julia enviroment should be activated at the current directory.
 
-
+!!! warning
+    Make sure all your action files (all the files in `.github/workflows`) is under the control of git for safety.
+"""
 macro upactions()
     yourpkgname = "TEMPR_$(Random.randstring(10))"
     pwd1 = ENV["PWD"]
