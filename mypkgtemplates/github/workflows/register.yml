@@ -61,7 +61,7 @@ jobs:
     # 3. Personal registry is add per julia install; that is, OkRegistry should be added before `Pkg.instantiate()`
       - name: Trigger next workflow
         if: success()
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
           repository: ${{ github.repository }}
           event-type: trigger-tagbot
