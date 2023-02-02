@@ -24,7 +24,13 @@ Please also read `README.md` of the generated package for further instructions t
 
 
 ## TagBot
+TagBot looks into your registry to get the registered versions and their corresponding `git-tree-sha1` to know on which commit a version is registered.
+If a tag is already on the commit, the corresponding version is skipped and TagBot goes to the next commit of registered version.
+
+That is, if you tag a commit yourself, TagBot won't help you create the release of that commit. On the other hand, you can fix some TagBot error by manually adding the correct tag yourself. See below.
+
 ### TagBot is designed to stop at failure
+
 Seemingly, TagBot is designed to be interrupted in the process of scanning sequentially the existent tags until `Error: TagBot experienced an unexpected internal failure`. In some cases, it experience this error at a much earlier stage that no further version can be tagged anymore.
 
 For example, in the case I modify the `TagBot.yml` for the attempt to include commit message as the release note by adding `${{ github.event.head_commit.message }}` in the `changelog` template as the input for the TagBot action, the internal failure will occurred if the tagbot does not triggered and run successfully exactly at that commit. The error is as followings:  
