@@ -44,4 +44,4 @@ PLUGIN_REGISTER() = RegisterAction(; file=mypkgtemplate_dir("github", "workflows
 PLUGIN_COMPATHELPER() = CompatHelper(;
     file=mypkgtemplate_dir("github", "workflows", "CompatHelper.yml"),
     cron="0 0 * * *",
-    )
+    ) # See for configuration: https://juliaregistries.github.io/CompatHelper.jl/stable/options/
