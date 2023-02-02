@@ -89,13 +89,13 @@ macro upactions()
     tempdir = joinpath(pwd1, yourpkgname)
     @info "Update CI actions in $pwd1; temporary working directory is $yourpkgname"
     script_to_exe = pkgtemplating_script(nothing, tempdir)
-    srcdir = joinpath(tempdir, ".github", "workflows")
-    dstdir = joinpaht(pwd1, ".github", "workflows")
-    githubfiles = readdir(srcdir); # todo: consider use OkFiles to use regular expression to copy only the yml
-    srcs = joinpath.(srcdir, githubfiles)
-    dsts = joinpath.(dstdir, githubfiles)
     return quote
         $script_to_exe;
+        srcdir = joinpath($tempdir, ".github", "workflows")
+        dstdir = joinpath($pwd1, ".github", "workflows")
+        githubfiles = readdir(srcdir); # todo: consider use OkFiles to use regular expression to copy only the yml
+        srcs = joinpath.(srcdir, githubfiles)
+        dsts = joinpath.(dstdir, githubfiles)
         cp.(srcs, dsts; force=true)
         rm($tempdir, recursive=true)
     end
