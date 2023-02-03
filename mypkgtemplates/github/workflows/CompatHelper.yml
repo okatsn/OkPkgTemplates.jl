@@ -4,8 +4,6 @@ on:
   schedule:
     - cron: <<&CRON>>
   workflow_dispatch:
-  repository_dispatch:
-    types: [trigger-tagbot]
 
 permissions:
   contents: write
