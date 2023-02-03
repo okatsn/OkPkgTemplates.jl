@@ -1,5 +1,9 @@
 """
 `pkgtemplating_script(dest, yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) to be executed at the scope that the macro is called.
+
+It
+- creates a package using `PkgTemplates.Templates`
+- `add Documenter, CompatHelperLocal, Test` into `Project.toml`
 """
 pkgtemplating_script(dest, yourpkgname) = quote
     t = Template(;
@@ -33,6 +37,10 @@ pkgtemplating_script(dest, yourpkgname) = quote
 
     t($yourpkgname)
 
+    using Pkg;
+    Pkg.activate(joinpath($dest, $yourpkgname));
+    Pkg.add(["Documenter", "CompatHelperLocal", "Test"])
+
     disp_info1()
     info_template_var_return(
         "PLUGIN_README" => default_readme_var,
@@ -60,11 +68,12 @@ copymyfiles_script(repo0, repo1) = quote
     push!(dsts, joinpath.(dstdir_gitact, githubfiles)...);
 
     # Test files
-    testfiles = ["Project.toml", "runtests.jl"];
+    testfiles = ["runtests.jl"];
     push!(srcs, joinpath.($repo0, "test", testfiles)...);
     push!(dsts, joinpath.($repo1, "test", testfiles)...);
     cp.(srcs, dsts; force=true)
 end
+# KEYNOTE: ./test/Project.toml is not created since in general case you will also require dependencies in ./Project.toml
 
 """
 `genpkg(yourpkgname::String)` generate your package using presets.
@@ -105,15 +114,14 @@ macro genpkg(yourpkgname::String)
     script_to_exe = pkgtemplating_script(dest, yourpkgname)
     return quote
         $script_to_exe;
-
     end
 end
 
 """
-Replace Github Actions (all the files in `.github/workflows`) with the latest version that generated from `OkPkgTemplates`. Noted that julia enviroment should be activated at the current directory.
+Replace Github Actions (all the files in `.github/workflows`) with the latest version that generated from `OkPkgTemplates`. Noted that julia enviroment should be activated in the current directory for your package in dev to update.
 
 !!! warning
-    Make sure all your action files (all the files in `.github/workflows`) is under the control of git for safety.
+    - Make sure all your action files (all the files in `.github/workflows`) is under the control of git for safety.
 """
 macro upactions()
     pwd1 = ENV["PWD"]
