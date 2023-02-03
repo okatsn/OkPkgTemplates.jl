@@ -22,6 +22,9 @@ Please also read `README.md` of the generated package for further instructions t
 ## Compatibility
 `OkPkgTemplates` is compatible to `PkgTemplates` of this commit: https://github.com/JuliaCI/PkgTemplates.jl/commit/0de5d855e050d93169f8661a13b3a53a8cb2b283 or [v0.7.29](https://github.com/JuliaCI/PkgTemplates.jl/releases/tag/v0.7.29)
 
+## The workflow of CI
+- On push of master/main branch, test and documentation actions in `CI.yml` runs.
+- On the modification of `Project.toml` , there is an attempt to register to OkRegistry. If the register process success, TagBot and CompatHelper will be triggered.
 
 ## TagBot
 TagBot looks into your registry to get the registered versions and their corresponding `git-tree-sha1` to know on which commit a version is registered.
