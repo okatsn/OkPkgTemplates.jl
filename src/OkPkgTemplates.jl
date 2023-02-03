@@ -15,6 +15,8 @@ using Markdown
 include("informing.jl")
 export info_template_var_return
 
+using TOML
+
 import Random
 include("generatepkg.jl")
 export @genpkg, @upactions

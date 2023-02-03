@@ -1,3 +1,9 @@
+# KEYNOTE:
+# In this script, it contains scripts (`...._script`) that is the code to be executed at the run-time,
+# and the macro (e.g., `@genpkg`, `@upactions`) for calling these scripts.
+#
+
+
 """
 `pkgtemplating_script(dest, yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) to be executed at the scope that the macro is called.
 
@@ -37,9 +43,7 @@ pkgtemplating_script(dest, yourpkgname) = quote
 
     t($yourpkgname)
 
-    using Pkg;
-    Pkg.activate(joinpath($dest, $yourpkgname));
-    Pkg.add(["Documenter", "CompatHelperLocal", "Test"])
+
 
     disp_info1()
     info_template_var_return(
@@ -47,6 +51,68 @@ pkgtemplating_script(dest, yourpkgname) = quote
         "PLUGIN_REGISTER" => reg_var)
 
 end
+
+"""
+After making the template successfully,
+add `"Documenter", "CompatHelperLocal"` to `[extras]` and `[targets]` as `runtests.jl` (may) use them.
+
+`updateprojtoml_script(dest, yourpkgname)` creates script that
+`projtoml_path = joinpath(dest, yourpkgname, "Project.toml")` will be modified on execution.
+
+It modify `Project.toml` by add [extras] and [targets] for the scope of Test.
+"""
+updateprojtoml_script(dest, yourpkgname) = quote
+    function ordering(str)
+        d = Dict(
+            "name"    => 1,
+            "uuid"    => 2,
+            "authors" => 3,
+            "version" => 4,
+            "deps"    => 5,
+            "compat"  => 6,
+            "extras"  => 99,
+            "targets" => 100,
+        ) # the order for default look of Project.toml
+        get(d, str, 999) # for others, put them to the last
+    end
+
+
+
+    function pair_String_Any(entries)
+        [string(k) => v for (k, v) in pairs(entries)]
+    end
+
+
+    function update_project_toml!(d)
+        extraentries = pair_String_Any((
+                Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4XX",
+                Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40",
+                CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
+        ))
+
+        targetentries = ["Test", "Documenter", "CompatHelperLocal"]
+        target_test = d["targets"]["test"]
+
+        push!(d["extras"], extraentries...)
+        push!(target_test, targetentries...)
+        unique!(target_test)
+        return d
+    end
+
+    projtoml_path = joinpath($dest, $yourpkgname, "Project.toml")
+    d = TOML.parsefile(projtoml_path)
+    update_project_toml!(d)
+
+    open(projtoml_path, "w") do io
+        TOML.print(io, d; sorted=true,by=ordering)
+    end
+    @info " $projtoml_path is updated."
+
+end
+# It is useless to do the followings in script:
+# using Pkg;
+# Pkg.activate(joinpath($dest, $yourpkgname));
+# Pkg.add(["Documenter", "CompatHelperLocal", "Test"])
 
 """
 Copy some files from `repo0` to `repo1`.
@@ -74,6 +140,7 @@ copymyfiles_script(repo0, repo1) = quote
     cp.(srcs, dsts; force=true)
 end
 # KEYNOTE: ./test/Project.toml is not created since in general case you will also require dependencies in ./Project.toml
+# See https://pkgdocs.julialang.org/v1/creating-packages/#Test-specific-dependencies-in-Julia-1.2-and-above
 
 """
 `genpkg(yourpkgname::String)` generate your package using presets.
@@ -107,13 +174,19 @@ and then generate the Package
     - If you have the thought to redefine `OkPkgTemplates.PLUGIN_...`
     - If you want to set `PkgTemplates.user_view` [(for example)](https://juliaci.github.io/PkgTemplates.jl/stable/user/#Extending-Existing-Plugins-1)
 
+# Also see the helps
+- `copymyfiles_script`
+- `updateprojtoml_script`
+
 """
 macro genpkg(yourpkgname::String)
     dest = chkdest()
-    @info "Targeting: $(joinpath(dest, yourpkgname))"
+    @info "Targeting: $(joinpath(dest, yourpkgname))."
     script_to_exe = pkgtemplating_script(dest, yourpkgname)
+    script_upprojtoml = updateprojtoml_script(dest, yourpkgname)
     return quote
         $script_to_exe;
+        $script_upprojtoml
     end
 end
 
@@ -122,19 +195,26 @@ Replace Github Actions (all the files in `.github/workflows`) with the latest ve
 
 !!! warning
     - Make sure all your action files (all the files in `.github/workflows`) is under the control of git for safety.
+
+# Also see the helps
+- `copymyfiles_script`
+- `updateprojtoml_script`
 """
 macro upactions()
-    pwd1 = ENV["PWD"]
+    pwd1 = ENV["PWD"] # it should be the directory that has `Project.toml`
+    # TODO: add @assert for testing pwd1 is a project directory.
     tempdir = joinpath(pwd1, "TEMPR_$(Random.randstring(10))")
     pkgname = Pkg.Types.Context().env.pkg.name
     @info "Update CI actions in $pwd1; temporary working directory is $(tempdir)"
-    script_to_exe = pkgtemplating_script(tempdir, pkgname)
+    script_to_exe = pkgtemplating_script(tempdir, pkgname) # at tempdir, make package pkgname.
     repo0 = joinpath(tempdir, pkgname)
     repo1 = pwd1
-    script_to_exe_2 = copymyfiles_script(repo0, repo1)
+    script_copy_paste = copymyfiles_script(repo0, repo1)
+    script_upprojtoml = updateprojtoml_script(repo1, "") # Modify Project.toml by add [extras] and [targets] for the scope of Test.
     return quote
         $script_to_exe;
-        $script_to_exe_2;
+        $script_copy_paste;
         rm($tempdir, recursive=true)
+        $script_upprojtoml
     end
 end
