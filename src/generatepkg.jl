@@ -1,5 +1,5 @@
 """
-`pkgtemplating_script(dest, yourpkgname)` returns the script (`quote ... end`) to be executed at the scope that the macro is called.
+`pkgtemplating_script(dest, yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) to be executed at the scope that the macro is called.
 """
 pkgtemplating_script(dest, yourpkgname) = quote
     t = Template(;
@@ -41,6 +41,32 @@ pkgtemplating_script(dest, yourpkgname) = quote
 end
 
 """
+Copy some files from `repo0` to `repo1`.
+List of files:
+- All files under `.github/workflows`
+-
+"""
+copymyfiles_script(repo0, repo1) = quote
+    srcs = String[];
+    dsts = String[];
+
+    # Github actions
+    srcdir_gitact = joinpath($repo0, ".github", "workflows")
+    githubfiles = readdir(srcdir_gitact); # todo: consider use OkFiles to use regular expression to copy only the yml
+
+    dstdir_gitact = joinpath($repo1, ".github", "workflows")
+
+    push!(srcs, joinpath.(srcdir_gitact, githubfiles)...);
+    push!(dsts, joinpath.(dstdir_gitact, githubfiles)...);
+
+    # Test files
+    testfiles = ["Project.toml", "runtests.jl"];
+    push!(srcs, joinpath.($repo0, "test", testfiles)...);
+    push!(dsts, joinpath.($repo1, "test", testfiles)...);
+    cp.(srcs, dsts; force=true)
+end
+
+"""
 `genpkg(yourpkgname::String)` generate your package using presets.
 
 
@@ -77,7 +103,10 @@ macro genpkg(yourpkgname::String)
     dest = chkdest()
     @info "Targeting: $(joinpath(dest, yourpkgname))"
     script_to_exe = pkgtemplating_script(dest, yourpkgname)
-    return script_to_exe
+    return quote
+        $script_to_exe;
+
+    end
 end
 
 """
@@ -87,20 +116,17 @@ Replace Github Actions (all the files in `.github/workflows`) with the latest ve
     Make sure all your action files (all the files in `.github/workflows`) is under the control of git for safety.
 """
 macro upactions()
-    yourpkgname = "TEMPR_$(Random.randstring(10))"
     pwd1 = ENV["PWD"]
-    tempdir = joinpath(pwd1, yourpkgname)
+    tempdir = joinpath(pwd1, "TEMPR_$(Random.randstring(10))")
     pkgname = Pkg.Types.Context().env.pkg.name
-    @info "Update CI actions in $pwd1; temporary working directory is $yourpkgname"
+    @info "Update CI actions in $pwd1; temporary working directory is $(tempdir)"
     script_to_exe = pkgtemplating_script(tempdir, pkgname)
+    repo0 = joinpath(tempdir, pkgname)
+    repo1 = pwd1
+    script_to_exe_2 = copymyfiles_script(repo0, repo1)
     return quote
         $script_to_exe;
-        srcdir = joinpath($tempdir, $pkgname, ".github", "workflows")
-        dstdir = joinpath($pwd1, ".github", "workflows")
-        githubfiles = readdir(srcdir); # todo: consider use OkFiles to use regular expression to copy only the yml
-        srcs = joinpath.(srcdir, githubfiles)
-        dsts = joinpath.(dstdir, githubfiles)
-        cp.(srcs, dsts; force=true)
+        $script_to_exe_2;
         rm($tempdir, recursive=true)
     end
 end
