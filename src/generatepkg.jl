@@ -62,6 +62,7 @@ add `"Documenter", "CompatHelperLocal"` to `[extras]` and `[targets]` as `runtes
 It modify `Project.toml` by add [extras] and [targets] for the scope of Test.
 """
 updateprojtoml_script(dest, yourpkgname) = quote
+
     function ordering(str)
         d = Dict(
             "name"    => 1,
@@ -71,9 +72,10 @@ updateprojtoml_script(dest, yourpkgname) = quote
             "deps"    => 5,
             "compat"  => 6,
             "extras"  => 99,
-            "targets" => 100,
+            "targets" => 100, # largest the last
         ) # the order for default look of Project.toml
-        get(d, str, 999) # for others, put them to the last
+        master_order = get(d, str, 999) # for others, put them to the last
+        final_order = master_order + stringscore(str)
     end
 
 
@@ -85,10 +87,10 @@ updateprojtoml_script(dest, yourpkgname) = quote
 
     function update_project_toml!(d)
         extraentries = pair_String_Any((
-                Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4XX",
+                Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4",
                 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40",
                 CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
-        ))
+        )) # SETME: set your extra packages for env. of Test here.
 
         targetentries = ["Test", "Documenter", "CompatHelperLocal"]
         target_test = d["targets"]["test"]
