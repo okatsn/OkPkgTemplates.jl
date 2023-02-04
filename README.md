@@ -19,8 +19,39 @@ For more information, see
 Please also read `README.md` of the generated package for further instructions to complete the workflow setting.
 
 
+## The workflow of CI
+- On push of master/main branch, test and documentation actions in `CI.yml` runs.
+    - it runs test, where compatibility is checked through `CompatHelperLocal`.
+    - it runs Documenter.
+- On the modification of `Project.toml` , there is an attempt to register to OkRegistry. If the register process success, TagBot and CompatHelper will be triggered.
+- It is suggested to run `pkg> test` in local and fix `[compat]` in `Project.toml` to avoid excessive noise from `CompatHelper` pull requests. 
+
+Noted that both test locally and github actions do the followings:
+- test and doctest
+- check compatibility
+
+It's no harm but you may remove either by deleting files in `.github/workflows` or relative lines in `test/runtests.jl`.
+
+
 ## Compatibility
 `OkPkgTemplates` is compatible to `PkgTemplates` of this commit: https://github.com/JuliaCI/PkgTemplates.jl/commit/0de5d855e050d93169f8661a13b3a53a8cb2b283 or [v0.7.29](https://github.com/JuliaCI/PkgTemplates.jl/releases/tag/v0.7.29)
+
+
+### Suggestion from `CompatHelper`
+`CompatHelper` or `CompatHelperLocal` may give misleading/confusing suggestion for the `[compat]` field of your project in `Project.toml` **WHEN** there are packages having exact the same name but in different registry.
+For example, both General and OkRegistry has `DataFrameTools`. In this case, `CompatHelper` may suggest the version number of that in the General Registry even if you only apply the `DataFrameTools` of OkRegistry in a project.
+
+So far, I simply add both the suggested version number ("1.0.8" for `DataFrameTools` of General Registry) and the right version number ("0.5.2" for that in OkRegistry) to suppress the suggestion from `CompatHelper`.
+```toml
+[compat]
+DataFameTools= ["0.5.2", "1.0.8"]
+```
+
+Follow the the tips in [Interpreting and resolving version conflicts](https://pkgdocs.julialang.org/v1/managing-packages/#conflicts) and [Fixing conflicts](https://pkgdocs.julialang.org/v1/compatibility/#Fixing-conflicts) where:
+- Make packages in your default julia environment as few as possible
+- For a project of scientific report, use [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/) or delete `[compat]`, `CompatHelper` in CI and `CompatHelperLocal` in test, since `Manuscript.toml` is sufficient for reproducibility of your project.
+
+
 
 # Explain
 
