@@ -19,8 +19,9 @@ See [`CITATION.bib`](CITATION.bib) for the relevant reference(s).
 This is a julia package created using `okatsn`'s preference, and this package is expected to be registered to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) for CIs to work properly.
 
 !!! note Checklist
-    - [ ] Add `ACCESS_OKREGISTRY` secret in the settings of this repository on Github, or delete both `register.yml` and `TagBot.yml` in `/.github/workflows/`. See [Auto-Registration](#auto-registration).
     - [ ] Create an empty repository (namely, `https://github.com/okatsn/{{{PKG}}}.jl.git`) on github, and push the local to origin. See [connecting to remote](#tips-for-connecting-to-remote).
+    - [ ] Add `ACCESS_OKREGISTRY` secret in the settings of this repository on Github, or delete both `register.yml` and `TagBot.yml` in `/.github/workflows/`. See [Auto-Registration](#auto-registration).
+
 
 ### Go to [OkPkgTemplates](https://github.com/okatsn/OkPkgTemplates.jl) for more information
 - [How TagBot works and trouble shooting](https://github.com/okatsn/OkPkgTemplates.jl#tagbot)
@@ -32,14 +33,17 @@ This is a julia package created using `okatsn`'s preference, and this package is
 - You have to add `ACCESS_OKREGISTRY` to the secret under the remote repo (e.g., https://github.com/okatsn/{{{PKG}}}.jl).
 - `ACCESS_OKREGISTRY` allows `CI.yml` to automatically register/update this package to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry).
 
-### Test docstring
-`pkg> add Documenter` to make doc tests worked.
+### Test
+#### How to add a new test
+Add `.jl` files (that has `@testset` block or `@test` inside) in `test/`; `test/runtests.jl` will automatically `include` all the `.jl` scripts there.
 
+#### Test docstring
 `doctest` is executed at the following **two** places:
 1. In `CI.yml`, `jobs: test: ` that runs `test/runtests.jl`
 2. In `CI.yml`, `jobs: docs: ` that runs directly on bash.
 
-It is no harm to run both, or you may manually delete either.
+It is no harm to run both, but you can manually delete either.
+Of course, `pkg> test` will also run `doctest` since it runs also `test/runtests.jl`.
 
 ### Tips for connecting to remote
 Connect to remote:
