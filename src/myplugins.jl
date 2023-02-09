@@ -98,6 +98,7 @@ If you want to automatically add commit message release note of the registered c
     - It is possible to [Iterating over github.event.commits](https://github.com/orgs/community/discussions/35120) or [use join function to concatenate commits](https://github.com/orgs/community/discussions/25164).
     - Alternative way to [Get a commit](https://docs.github.com/en/rest/git/commits?apiVersion=2022-11-28#get-a-commit) using `curl`.
   - Also see [github context](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context) for what others are available.
+  - **Noted that multiline string is not acceptable for json**, you have to use e.g. "# hello\\n second line" istead as the commit message where Project.toml version is raised.
 
 Be aware if you have in several un-pushed commits that changes 'Project.toml', and push them at once, `"commit_msg": "\${{ github.event.commits[0].message` will be the first commit and it is not necessarily the commit to be registered. UpdateOkReg register a version for this package at the latest commit being pushed.
 """
