@@ -36,6 +36,17 @@ It's no harm but you may remove either by deleting files in `.github/workflows` 
 ## Compatibility
 `OkPkgTemplates` is compatible to `PkgTemplates` of this commit: https://github.com/JuliaCI/PkgTemplates.jl/commit/0de5d855e050d93169f8661a13b3a53a8cb2b283 or [v0.7.29](https://github.com/JuliaCI/PkgTemplates.jl/releases/tag/v0.7.29)
 
+### Compatibility for your julia project
+By default, either `CompatHelperLocal` in test and `CompatHelper` in .github/workflows is suggestive.
+You may replace the `@test true` line in `@testset "CompatHelperLocal"` in runtests.jl by 
+```julia
+@test CompatHelperLocal.@check()
+```
+to make the compatibility check mandatory. 
+
+!!! warning On `@test CompatHelperLocal.@check()` in runtests.jl
+    In this way, test in .github/workflows/CI.yml will fail if you did not fix `[compat]` properly before push into branch `main`.
+
 
 ### Suggestion from `CompatHelper`
 `CompatHelper` or `CompatHelperLocal` may give misleading/confusing suggestion for the `[compat]` field of your project in `Project.toml` **WHEN** there are packages having exact the same name but in different registry.
