@@ -9,6 +9,12 @@ on:
     types:
       - created
   workflow_dispatch:
+
+## Allow permissions may fix some error; also see register.yml
+## - see [Tagbot-setup](https://github.com/JuliaRegistries/TagBot#setup)
+# permissions:
+#   contents: write
+
 jobs:
   TagBot:
     # if: github.event_name == 'workflow_dispatch' || github.actor == '{{{TRIGGER}}}'
