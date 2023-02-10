@@ -2,8 +2,9 @@ module OkPkgTemplates
 
 # Write your package code here.
 using PkgTemplates, Pkg, Dates
-include("myplugins.jl")
+
 include("mypkgtemplates.jl")
+include("myplugins.jl")
 include("mydefaults.jl")
 
 
