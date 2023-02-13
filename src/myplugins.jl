@@ -6,7 +6,7 @@ PLUGIN_README() = PkgTemplates.Readme(; file=mypkgtemplate_dir("README.md"), des
 `PLUGIN_TAGBOT()` returns an `PkgTemplates.TagBot`.
 You can redefine this function.
 
-By default it add the commit message `github.event.client_payload.commit_msg` as part of the release note. Please must read **Known issue** in the doc of `PLUGIN_REGISTER()`.
+By default it add `github.event.client_payload.logfile_msg` as part of the release note. Please must read **Known issue** in the doc of `PLUGIN_REGISTER()`.
 
 # Changelog
 For variables that you can use in the changelog template, see [line 174-184, tagbot/action/changelog.py](https://github.com/JuliaRegistries/TagBot/blob/afbc9c3f5dc23047ea6e187f2cb1a3ac7d1fbbeb/tagbot/action/changelog.py) and [TagBot/Changelogs](https://github.com/JuliaRegistries/TagBot#changelogs). Which are
@@ -31,7 +31,7 @@ Also see
 PLUGIN_TAGBOT() = TagBot(;registry="okatsn/OkRegistry",
         changelog = """
         ## {{ package }} {{ version }}
-        \${{ github.event.client_payload.commit_msg }}
+        \${{ github.event.client_payload.logfile_msg }}
         {% if previous_release %}
         [Diff since {{ previous_release }}]({{ compare_url }})
         {% endif %}
