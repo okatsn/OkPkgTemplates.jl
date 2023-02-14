@@ -25,3 +25,6 @@ Read the `changelog.md` as a part of the release note.
 - CI (namely `register.yml`) now reads `changelog.md` and pass the content to TagBot as part of the release note.
 - Fix the undesired escape of line break (`\n`) in reading the `changelog.md` as a part of the release note.
 - Instructions for defining `GITHUB_OUTPUT` in `register.yml`, with some bash script explanation.
+
+## v0.4.1
+- Fix the error originates from "quote" in `changelog.md` by escaping it using `OkExpressions.print_raw`.
