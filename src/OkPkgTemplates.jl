@@ -19,7 +19,7 @@ export info_template_var_return
 include("stringscore.jl")
 export stringscore
 
-using TOML
+using TOML, Markdown
 import Random
 include("generatepkg.jl")
 export @genpkg, @upactions

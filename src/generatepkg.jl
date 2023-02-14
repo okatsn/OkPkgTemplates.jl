@@ -108,6 +108,20 @@ updateprojtoml_script(dest, yourpkgname) = quote
     open(projtoml_path, "w") do io
         TOML.print(io, d; sorted=true,by=ordering)
     end
+
+    cglog = md"""
+    # Changelog
+    ## v0.1.0
+    - Initiating the project.
+    """
+
+    changelog_file = joinpath($dest, $yourpkgname, "changelog.md")
+    if !isfile(changelog_file)
+        open(changelog_file, "w") do io
+            write(io, string(cglog))
+        end
+    end
+
     @info " $projtoml_path is updated."
 
 end
@@ -140,6 +154,14 @@ copymyfiles_script(repo0, repo1) = quote
     push!(srcs, joinpath.($repo0, "test", testfiles)...);
     push!(dsts, joinpath.($repo1, "test", testfiles)...);
     cp.(srcs, dsts; force=true)
+
+    try
+        changelog_file = joinpath($repo0, "changelog.md")
+        changelog_dest = joinpath($repo1, "changelog.md")
+        cp(changelog_file, changelog_dest; force=false)
+    catch;
+        @info "changelog.md not availabe or already exists."
+    end
 end
 # KEYNOTE: ./test/Project.toml is not created since in general case you will also require dependencies in ./Project.toml
 # See https://pkgdocs.julialang.org/v1/creating-packages/#Test-specific-dependencies-in-Julia-1.2-and-above
