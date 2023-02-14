@@ -53,7 +53,7 @@ jobs:
           {{#DISPATCH_DELAY}}
           dispatch_delay: {{{DISPATCH_DELAY}}}
           {{/DISPATCH_DELAY}}
-  TagBotOriginal:
+  TagBotNoChangelog: # KEYNOTE: Manually run this to tag previous versions
     if: github.event_name == 'workflow_dispatch' || github.actor == '{{{TRIGGER}}}'
     runs-on: ubuntu-latest
     steps:
