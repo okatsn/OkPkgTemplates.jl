@@ -23,7 +23,7 @@ Please also read `README.md` of the generated package for further instructions t
 - On push of master/main branch, test and documentation actions in `CI.yml` runs.
     - it runs test, where compatibility is checked through `CompatHelperLocal`.
     - it runs Documenter.
-- On the modification of `Project.toml` , there is an attempt to register to OkRegistry. If the register process success, TagBot and CompatHelper will be triggered.
+- On the push of `Project.toml` , there is an attempt to register to OkRegistry. If the register process success, TagBot and CompatHelper will be triggered. If there is a section in the `changelog.md` with head level 2 containing the version number in `Project.toml` (e.g., `## v0.2.10` in `changelog.md` ), the section will be part of the release message.
 - It is suggested to run `pkg> test` in local and fix `[compat]` in `Project.toml` to avoid excessive noise from `CompatHelper` pull requests. 
 
 Noted that both test locally and github actions do the followings:
@@ -96,6 +96,10 @@ This is because beyond that commit (starting a new machine), `github.event.head_
 ### Trouble shooting
 Once it experienced this kind of error in the history, further tagging will never be reached EVEN IF you fixed your `TagBot.yml`. To deal with this problem, just manually tag on all commits that should be tagged correctly, and TagBot can go further from the last tag.
 
+#### Use `TagBot` original
+If the failure originates from templating changelog, run `TagBotNoChangelog` in Github Actions might solve the problem.
+
+#### Manually add tags
 Manually add tags correctly may solve many problems:
 1. Go to Github Actions of the repo, click TagBot to see at what version it stuck.
 2. Go to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) to get the git-tree-sha1 of the version where it always failed.
