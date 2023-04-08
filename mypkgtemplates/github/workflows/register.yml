@@ -70,9 +70,6 @@ jobs:
           dir0: TEMP
         id: regist
     # KEYNOTE:
-    # - If you echo variable of the same name to GITHUB_OUTPUT, the former will be overwrite by the latter. To preserve all, the variable name (e.g., `text` in echo "text=$line") must be different. See https://stackoverflow.com/questions/74137120/how-to-fix-or-avoid-error-unable-to-process-file-command-output-successfully
-    # - For GITHUB_OUTPUT, see: https://stackoverflow.com/questions/59191913/how-do-i-get-the-output-of-a-specific-step-in-github-actions and https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs
-    # - For multi-line output, see https://trstringer.com/github-actions-multiline-strings/
     # - Declare dynamic variables (not used in this script) https://dev.to/a1ex/tricks-of-declaring-dynamic-variables-in-bash-15b9
     # - How to override an environment variable in Github Actions? https://stackoverflow.com/questions/66687561/how-to-override-an-environment-variable-in-github-actions
 
