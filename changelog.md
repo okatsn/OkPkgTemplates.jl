@@ -28,3 +28,7 @@ Read the `changelog.md` as a part of the release note.
 
 ## v0.4.1
 - Fix the error originates from "quote" in `changelog.md` by escaping it using `OkExpressions.print_raw`.
+
+## v0.4.4
+- upgrade from `checkout@v2` to `checkout@v3` (v0.4.4)
+- Use `OkRegistrator`, `okatsn/get-changelog@v1` and `okatsn/add-registry@v2` for add OkRegistry and generate release note from local changelog (v0.4.3)
