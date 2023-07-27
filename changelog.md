@@ -32,3 +32,7 @@ Read the `changelog.md` as a part of the release note.
 ## v0.4.4
 - upgrade from `checkout@v2` to `checkout@v3` (v0.4.4)
 - Use `OkRegistrator`, `okatsn/get-changelog@v1` and `okatsn/add-registry@v2` for add OkRegistry and generate release note from local changelog (v0.4.3)
+
+## v0.5.0
+
+- julia version compatibility to 1.9
