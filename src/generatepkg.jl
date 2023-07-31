@@ -3,55 +3,6 @@
 # and the macro (e.g., `@genpkg`, `@upactions`) for calling these scripts.
 #
 
-
-"""
-`pkgtemplating_script(dest, yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) to be executed at the scope that the macro is called.
-
-It
-- creates a package using `PkgTemplates.Templates`
-- `add Documenter, CompatHelperLocal, Test` into `Project.toml`
-"""
-pkgtemplating_script(dest, yourpkgname) = quote
-    t = Template(;
-        user=DEFAULT_USERNAME(),
-        dir=$dest,
-        julia=DEFAULT_JULIAVER(),
-        plugins=[
-            Git(; manifest=false),
-            PLUGIN_COMPATHELPER(),
-            PLUGIN_GITHUBACTION(),
-            Codecov(), # https://about.codecov.io/
-            Documenter{GitHubActions}(),
-            PLUGIN_README(),
-            PLUGIN_TAGBOT(),
-            PLUGIN_TEST(),
-            PLUGIN_REGISTER()
-        ]
-    )
-    default_readme_var = PkgTemplates.view(PLUGIN_README(), t, $yourpkgname)
-    merge!(default_readme_var, Dict(
-        "TODAY" => today()
-    ))
-    function PkgTemplates.user_view(::Readme, ::Template, ::AbstractString)
-        return default_readme_var
-    end
-
-    reg_var = Dict("PKG" => $yourpkgname)
-    function PkgTemplates.user_view(::RegisterAction, ::Template, ::AbstractString)
-        return reg_var
-    end
-
-    t($yourpkgname)
-
-
-
-    disp_info1()
-    info_template_var_return(
-        "PLUGIN_README" => default_readme_var,
-        "PLUGIN_REGISTER" => reg_var)
-
-end
-
 """
 After making the template successfully,
 add `"Documenter", "CompatHelperLocal"` to `[extras]` and `[targets]` as `runtests.jl` (may) use them.
@@ -208,10 +159,10 @@ macro genpkg(yourpkgname::String)
     @info "Targeting: $(joinpath(dest, yourpkgname))."
     script_to_exe = pkgtemplating_script(dest, yourpkgname)
     script_upprojtoml = updateprojtoml_script(dest, yourpkgname)
-    return quote
-        $script_to_exe
-        $script_upprojtoml
-    end
+    return Expr(:block,
+        script_to_exe,
+        script_upprojtoml
+    )
 end
 
 """
@@ -223,7 +174,7 @@ This function is separated for test purpose. For user, please use `@upactions`.
 # Example
 ```julia
 ex = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build)
-@eval(OkPkgTemplates, $ex) # expression must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
+@eval(OkPkgTemplates, \$ex) # expression must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
 ```
 
 !!! warning
