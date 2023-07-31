@@ -1,6 +1,8 @@
 # Readme
 # - see also PkgTemplates/src/plugins/readme.jl
 
+my_okpkgtemplate_dir(args...) = mypkgtemplate_dir("for_okregistry", args...)
+
 register_yml_code_1 = raw"""
     client-payload: '{"commit_msg": "${{ github.event.commits[0].message }}"}'
 """
@@ -53,7 +55,7 @@ const commit_msg = "github.event.client_payload.commit_msg"
 const logfile_msg = "github.event.client_payload.logfile_msg"
 
 
-PLUGIN_README() = PkgTemplates.Readme(; file=mypkgtemplate_dir("README.md"), destination="README.md")
+PLUGIN_README() = PkgTemplates.Readme(; file=my_okpkgtemplate_dir("README.md"), destination="README.md")
 
 """
 `PLUGIN_TAGBOT()` returns an `PkgTemplates.TagBot`.
@@ -81,41 +83,41 @@ Also see
 - If your registry is public, you don't need to provide token. For more information, see [here](https://github.com/JuliaRegistries/TagBot#custom-registries)
 
 """
-PLUGIN_TAGBOT() = TagBot(;registry="okatsn/OkRegistry",
-        changelog = """
-        ## {{ package }} {{ version }}
-        \${{ $logfile_msg }}
-        {% if previous_release %}
-        [Diff since {{ previous_release }}]({{ compare_url }})
-        {% endif %}
-        {% if custom %}
-        {{ custom }}
-        {% endif %}
-        {% if issues %}
-        **Closed issues:**
-        {% for issue in issues %}
-        - {{ issue.title }} (#{{ issue.number }})
-        {% endfor %}
-        {% endif %}
-        {% if pulls %}
-        **Merged pull requests:**
-        {% for pull in pulls %}
-        - {{ pull.title }} (#{{ pull.number }}) (@{{ pull.author.username }})
-        {% endfor %}
-        {% endif %}
-        """,
-        file = mypkgtemplate_dir("github", "workflows", "TagBot.yml"))
+PLUGIN_TAGBOT() = TagBot(; registry="okatsn/OkRegistry",
+    changelog="""
+  ## {{ package }} {{ version }}
+  \${{ $logfile_msg }}
+  {% if previous_release %}
+  [Diff since {{ previous_release }}]({{ compare_url }})
+  {% endif %}
+  {% if custom %}
+  {{ custom }}
+  {% endif %}
+  {% if issues %}
+  **Closed issues:**
+  {% for issue in issues %}
+  - {{ issue.title }} (#{{ issue.number }})
+  {% endfor %}
+  {% endif %}
+  {% if pulls %}
+  **Merged pull requests:**
+  {% for pull in pulls %}
+  - {{ pull.title }} (#{{ pull.number }}) (@{{ pull.author.username }})
+  {% endfor %}
+  {% endif %}
+  """,
+    file=my_okpkgtemplate_dir("github", "workflows", "TagBot.yml"))
 
 # Test
-PLUGIN_TEST() = Tests(; file=mypkgtemplate_dir("test","runtests.jl")) # see PkgTemplates/src/plugins/tests.jl
+PLUGIN_TEST() = Tests(; file=my_okpkgtemplate_dir("test", "runtests.jl")) # see PkgTemplates/src/plugins/tests.jl
 
 
 # see PkgTemplates/src/plugins/ci.jl
-PLUGIN_GITHUBACTION() = GitHubActions(;file = mypkgtemplate_dir("github", "workflows", "CI.yml"))
+PLUGIN_GITHUBACTION() = GitHubActions(; file=my_okpkgtemplate_dir("github", "workflows", "CI.yml"))
 
 
 """
-`PLUGIN_REGISTER()` by default uses templates in $(mypkgtemplate_dir("github", "workflows", "register.yml")).
+`PLUGIN_REGISTER()` by default uses templates in $(my_okpkgtemplate_dir("github", "workflows", "register.yml")).
 
 In the default template, job attempts to register the latest pushed commit of `YourPackage` where `Project.toml` is modified. If success, `TagBot.yml` will be triggered. See also `PLUGIN_TAGBOT`.
 
@@ -126,10 +128,10 @@ According to the default "register.yml", in the workflow "Register Package to Ok
 
 After the current version is successfully registerd, TagBot will be triggered. However, if there is something wrong in tagging the previous version, that is a version exists in OkRegistry but failed to be tagged with TagBot, TagBot will stop at that version; and thus, succeeding versions cannot be tagged. See README for trouble shooting.
 """
-PLUGIN_REGISTER() = RegisterAction(; file=mypkgtemplate_dir("github", "workflows", "register.yml"))
+PLUGIN_REGISTER() = RegisterAction(; file=my_okpkgtemplate_dir("github", "workflows", "register.yml"))
 
 
 PLUGIN_COMPATHELPER() = CompatHelper(;
-    file=mypkgtemplate_dir("github", "workflows", "CompatHelper.yml"),
-    cron="0 0 * * *",
-    ) # See for configuration: https://juliaregistries.github.io/CompatHelper.jl/stable/options/
+    file=my_okpkgtemplate_dir("github", "workflows", "CompatHelper.yml"),
+    cron="0 0 * * *"
+) # See for configuration: https://juliaregistries.github.io/CompatHelper.jl/stable/options/
