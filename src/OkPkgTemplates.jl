@@ -27,6 +27,6 @@ include("generalgenpkg.jl")
 include("templates/template_okreg.jl")
 include("templates/template_gereg.jl")
 include("generatepkg.jl") # @genpkg uses templates/**
-export @genpkg, @upactions
+export @genpkg, @upactions, OkReg, GeneralReg
 
 end

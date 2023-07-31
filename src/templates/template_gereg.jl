@@ -21,3 +21,11 @@ pkgtemplating_gereg(dest, yourpkgname) = quote
 
     t($yourpkgname)
 end
+
+
+struct GeneralReg <: TemplateIdentifier end
+
+macro genpkg(yourpkgname::String, ::Type{GeneralReg})
+    dest = chkdest()
+    return genpkg(dest, yourpkgname, pkgtemplating_gereg, updateprojtoml_script)
+end

@@ -1,10 +1,52 @@
+
+"""
+For developer, add new `struct XXX <: TemplateIdentifier end` for every new `@genpkg`.
+"""
+abstract type TemplateIdentifier end
+
+"""
+`genpkg(yourpkgname::String, fs...)` execute scripts `fs` one by one in user's scope using `OkPkgTemplates`'s utilities.
+
+Please define `OkPkgTemplates.DEFAULT_**` for changing defaults.
+- If `OkPkgTemplates.DEFAULT_DESTINATION()` returns an empty string, it use `Pkg.devdir()` at user's scope.
+
+
+!!! tip
+    In julia REPL,
+    - key in `OkPkgTemplates.DEFAULT_` and [tab] to list all functions that returns default variables
+    - key in `OkPkgTemplates.PLUGIN_` and [tab] to list all functions that returns `::PkgTemplates.Plugin` presets.
+    - Redefine these functions in the local scope to assign the variable.
+
+
+# Example
+To specify output destination, redefine `DEFAULT_DESTINATION()`
+```julia
+OkPkgTemplates.DEFAULT_DESTINATION() = pwd()
+```
+
+and then generate the Package
+```julia
+@genpkg "MyNewProject" OkReg
+```
+
+!!! note
+    - Feel free to redefine `OkPkgTemplates.DEFAULT_...`
+
+!!! warning
+    In the following cases, write a new macro of your own referencing `@genpkg` instead, or just use `PkgTemplates` [as instructed](https://juliaci.github.io/PkgTemplates.jl/stable/user/#Saving-Templates-1):
+    - If you have the thought to redefine `OkPkgTemplates.PLUGIN_...`
+    - If you want to set `PkgTemplates.user_view` [(for example)](https://juliaci.github.io/PkgTemplates.jl/stable/user/#Extending-Existing-Plugins-1)
+
+# Also see the helps
+- `copymyfiles_script`
+- `updateprojtoml_script`
+
+"""
 function genpkg(dest, yourpkgname, fs...)
     @info "Targeting: $(joinpath(dest, yourpkgname))."
     exprs = [f(dest, yourpkgname) for f in fs]
     return Expr(:block, exprs...)
 end
-
-
 
 # KEYNOTE:
 # In this script, it contains scripts (`...._script`) that is the code to be executed at the run-time,

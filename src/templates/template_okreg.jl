@@ -45,3 +45,10 @@ pkgtemplating_okreg(dest, yourpkgname) = quote
         "PLUGIN_REGISTER" => reg_var)
 
 end
+
+struct OkReg <: TemplateIdentifier end
+
+macro genpkg(yourpkgname::String, ::Type{OkReg})
+    dest = chkdest()
+    return genpkg(dest, yourpkgname, pkgtemplating_okreg, updateprojtoml_script)
+end
