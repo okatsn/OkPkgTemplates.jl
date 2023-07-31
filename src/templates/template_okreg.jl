@@ -47,9 +47,9 @@ pkgtemplating_okreg(dest, yourpkgname) = quote
 end
 
 struct OkReg <: TemplateIdentifier end
-OkReg() = [pkgtemplating_okreg, updateprojtoml_script]
+get_exprs(::Type{OkReg}) = [pkgtemplating_okreg, updateprojtoml_script]
 
-macro genpkg(yourpkgname::String, ::Type{OkReg})
+macro genpkg(yourpkgname::String, tp::Type{OkReg})
     dest = chkdest()
-    return genpkg(dest, yourpkgname, OkReg()...)
+    return genpkg(dest, yourpkgname, get_exprs(tp)...)
 end

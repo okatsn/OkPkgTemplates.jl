@@ -32,10 +32,10 @@ end
 ## 3. add a new method for `@genpkg` macro
 
 ```julia
-XXX() = [pkgtemplating_xxx, updateprojtoml_script] # Expressions to be executed
-macro genpkg(yourpkgname::String, ::Type{XXX})
+get_exprs(::Type{XXX}) = [pkgtemplating_xxx, updateprojtoml_script] # Expressions to be executed
+macro genpkg(yourpkgname::String, xxx::Type{XXX})
     dest = chkdest()
-    return genpkg(dest, yourpkgname, XXX()...)
+    return genpkg(dest, yourpkgname, get_exprs(xxx)...)
 end
 ```
 """
