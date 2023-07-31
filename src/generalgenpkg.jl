@@ -1,6 +1,37 @@
 
 """
-For developer, add new `struct XXX <: TemplateIdentifier end` for every new `@genpkg`.
+For developer,
+1. add new `struct XXX <: TemplateIdentifier end` for every new `@genpkg`.
+2. add a new templating expression, e.g.,
+    ```julia
+    pkgtemplating_xxx(dest, yourpkgname) = quote
+        t = Template(;
+            user=DEFAULT_USERNAME(),
+            dir=\$dest,
+            julia=DEFAULT_JULIAVER(),
+            plugins=[
+                Git(; manifest=false),
+                PLUGIN_COMPATHELPER(),
+                PLUGIN_GITHUBACTION(),
+                Codecov(), # https://about.codecov.io/
+                Documenter{GitHubActions}(),
+                PkgTemplates.Readme(),
+                PkgTemplates.TagBot(; changelog=tagbot_changelog()),
+                PLUGIN_TEST(),
+                RegisterAction()
+            ]
+        )
+
+        t(\$yourpkgname)
+    end
+    ```
+3. add a new method for `@genpkg` macro
+    ```julia
+    macro genpkg(yourpkgname::String, ::Type{XXX})
+        dest = chkdest()
+        return genpkg(dest, yourpkgname, pkgtemplating_xxx, updateprojtoml_script)
+    end
+    ```
 """
 abstract type TemplateIdentifier end
 

@@ -22,7 +22,7 @@ using TOML, Pkg
 
     @info "Trying to generate package at: $(dir_targetfolder())"
 
-    for TID in [OkReg, GeneralReg]
+    for TID in subtypes(OkPkgTemplates.TemplateIdentifier)
         # generate package
         @eval @genpkg $pkgname2build $TID
         # test if file/dir exists
