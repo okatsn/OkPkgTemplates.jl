@@ -4,7 +4,7 @@ module OkPkgTemplates
 using PkgTemplates, Pkg, Dates
 
 include("mypkgtemplates.jl")
-include("myplugins.jl")
+include("myokplugins.jl")
 include("mydefaults.jl")
 
 
