@@ -214,6 +214,33 @@ macro genpkg(yourpkgname::String)
     end
 end
 
+function upactions(pwd1::String, pkgname::String)
+    tempdir = joinpath(pwd1, "TEMPR_$(Random.randstring(10))")
+    @info "Update CI actions in $pwd1; temporary working directory is $(tempdir); targeting package $pkgname"
+    script_to_exe = pkgtemplating_script(tempdir, pkgname) # at tempdir, make package pkgname.
+    repo0 = joinpath(tempdir, pkgname)
+    repo1 = pwd1
+    script_copy_paste = copymyfiles_script(repo0, repo1)
+    script_upprojtoml = updateprojtoml_script(repo1, "") # Modify Project.toml by add [extras] and [targets] for the scope of Test.
+    return quote
+        $script_to_exe
+        $script_copy_paste
+        rm($tempdir, recursive=true)
+        $script_upprojtoml
+    end
+end
+
+function upactions(mod::Module)
+    pwd1 = pathof(mod) |> dirname |> dirname
+    pkgname = string(mod)
+    upactions(pwd1, pkgname)
+end
+
+macro upactions(mod::Module)
+    ex = upactions(mod)
+    return ex
+end
+
 """
 Replace Github Actions (all the files in `.github/workflows`) with the latest version that generated from `OkPkgTemplates`. Noted that julia enviroment should be activated in the current directory for your package in dev to update.
 
