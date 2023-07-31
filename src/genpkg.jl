@@ -34,7 +34,7 @@ macro sayhello3(ex::Expr)
 end
 ```
 
-# Example 1:
+# Example: variable `name` is not defined in macro's scope
 
 ```jldoctest bw1
 name = "Bruce Willey"
@@ -48,7 +48,12 @@ julia> @sayhello3 \$name
 ERROR: UndefVarError: `name` not defined
 ```
 
-# Example 2:
+!!! tip "Explain"
+    - `name` is passed as expression in this case, and it is not defined since macro dispatch is not based on the AST evaluated at runtime. Thus an error of `UndefVarError` is raised.
+    - See [Macros and dispatch](https://docs.julialang.org/en/v1/manual/metaprogramming/#Macros-and-dispatch) for more information.
+
+
+# Example: a creative application
 ```jldoctest
 @sayhello3 name = "Bruce Willey"
 
@@ -56,8 +61,13 @@ ERROR: UndefVarError: `name` not defined
 "Hello world! Bruce Willey"
 ```
 
-# Example 3
-Noted that in the following call of `@sayhello3`, `@sayhello3(str::String)` is dispatched.
+!!! tip "Explain"
+    In this example, the last argument of the expression `name = "Bruce Willey"` is "Bruce Willey".
+
+
+
+
+# Example 3: Use `@eval` if you want `name` be evaluated
 
 ```jldoctest bw1
 @eval @sayhello3 \$name
@@ -65,6 +75,9 @@ Noted that in the following call of `@sayhello3`, `@sayhello3(str::String)` is d
 # output
 "Hello world! Bruce Willey"
 ```
+!!! tip "Explain"
+    - `@eval` evalute the expression `@sayhello3 \$name` at runtime.
+    - Thus, the argument for `@sayhello3` is evaluated as `String`, and `@sayhello3(str::String)` is the dispatched method.
 
 
 """
@@ -79,7 +92,7 @@ macro sayhello3(symb::Symbol)
 end
 ```
 
-# Example
+# Example: A single the runtime variable is rendered as `Symbol`
 ```jldoctest
 name = "Bruce Willey"
 @sayhello3 name
