@@ -13,22 +13,22 @@ It
 """
 pkgtemplating_script(dest, yourpkgname) = quote
     t = Template(;
-    user=DEFAULT_USERNAME(),
-    dir=$dest,
-    julia=DEFAULT_JULIAVER(),
-    plugins=[
-        Git(; manifest=false),
-        PLUGIN_COMPATHELPER(),
-        PLUGIN_GITHUBACTION(),
-        Codecov(), # https://about.codecov.io/
-        Documenter{GitHubActions}(),
-        PLUGIN_README(),
-        PLUGIN_TAGBOT(),
-        PLUGIN_TEST(),
-        PLUGIN_REGISTER()
-    ],
+        user=DEFAULT_USERNAME(),
+        dir=$dest,
+        julia=DEFAULT_JULIAVER(),
+        plugins=[
+            Git(; manifest=false),
+            PLUGIN_COMPATHELPER(),
+            PLUGIN_GITHUBACTION(),
+            Codecov(), # https://about.codecov.io/
+            Documenter{GitHubActions}(),
+            PLUGIN_README(),
+            PLUGIN_TAGBOT(),
+            PLUGIN_TEST(),
+            PLUGIN_REGISTER()
+        ]
     )
-    default_readme_var = PkgTemplates.view(PLUGIN_README(),t,$yourpkgname)
+    default_readme_var = PkgTemplates.view(PLUGIN_README(), t, $yourpkgname)
     merge!(default_readme_var, Dict(
         "TODAY" => today()
     ))
@@ -37,7 +37,7 @@ pkgtemplating_script(dest, yourpkgname) = quote
     end
 
     reg_var = Dict("PKG" => $yourpkgname)
-    function PkgTemplates.user_view(::RegisterAction,::Template, ::AbstractString)
+    function PkgTemplates.user_view(::RegisterAction, ::Template, ::AbstractString)
         return reg_var
     end
 
@@ -65,13 +65,13 @@ updateprojtoml_script(dest, yourpkgname) = quote
 
     function ordering(str)
         d = Dict(
-            "name"    => 1,
-            "uuid"    => 2,
+            "name" => 1,
+            "uuid" => 2,
             "authors" => 3,
             "version" => 4,
-            "deps"    => 5,
-            "compat"  => 6,
-            "extras"  => 99,
+            "deps" => 5,
+            "compat" => 6,
+            "extras" => 99,
             "targets" => 100, # largest the last
         ) # the order for default look of Project.toml
         master_order = get(d, str, 999) # for others, put them to the last
@@ -87,9 +87,9 @@ updateprojtoml_script(dest, yourpkgname) = quote
 
     function update_project_toml!(d)
         extraentries = pair_String_Any((
-                Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4",
-                Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40",
-                CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
+            Documenter="e30172f5-a6a5-5a46-863b-614d45cd2de4",
+            Test="8dfed614-e22c-5e08-85e1-65c5234f0b40",
+            CompatHelperLocal="5224ae11-6099-4aaa-941d-3aab004bd678"
         )) # SETME: set your extra packages for env. of Test here.
 
         targetentries = ["Test", "Documenter", "CompatHelperLocal"]
@@ -106,7 +106,7 @@ updateprojtoml_script(dest, yourpkgname) = quote
     update_project_toml!(d)
 
     open(projtoml_path, "w") do io
-        TOML.print(io, d; sorted=true,by=ordering)
+        TOML.print(io, d; sorted=true, by=ordering)
     end
 
     cglog = md"""
@@ -137,29 +137,29 @@ List of files:
 -
 """
 copymyfiles_script(repo0, repo1) = quote
-    srcs = String[];
-    dsts = String[];
+    srcs = String[]
+    dsts = String[]
 
     # Github actions
     srcdir_gitact = joinpath($repo0, ".github", "workflows")
-    githubfiles = readdir(srcdir_gitact); # todo: consider use OkFiles to use regular expression to copy only the yml
+    githubfiles = readdir(srcdir_gitact) # todo: consider use OkFiles to use regular expression to copy only the yml
 
     dstdir_gitact = joinpath($repo1, ".github", "workflows")
 
-    push!(srcs, joinpath.(srcdir_gitact, githubfiles)...);
-    push!(dsts, joinpath.(dstdir_gitact, githubfiles)...);
+    push!(srcs, joinpath.(srcdir_gitact, githubfiles)...)
+    push!(dsts, joinpath.(dstdir_gitact, githubfiles)...)
 
     # Test files
-    testfiles = ["runtests.jl"];
-    push!(srcs, joinpath.($repo0, "test", testfiles)...);
-    push!(dsts, joinpath.($repo1, "test", testfiles)...);
+    testfiles = ["runtests.jl"]
+    push!(srcs, joinpath.($repo0, "test", testfiles)...)
+    push!(dsts, joinpath.($repo1, "test", testfiles)...)
     cp.(srcs, dsts; force=true)
 
     try
         changelog_file = joinpath($repo0, "changelog.md")
         changelog_dest = joinpath($repo1, "changelog.md")
         cp(changelog_file, changelog_dest; force=false)
-    catch;
+    catch
         @info "changelog.md not availabe or already exists."
     end
 end
@@ -209,7 +209,7 @@ macro genpkg(yourpkgname::String)
     script_to_exe = pkgtemplating_script(dest, yourpkgname)
     script_upprojtoml = updateprojtoml_script(dest, yourpkgname)
     return quote
-        $script_to_exe;
+        $script_to_exe
         $script_upprojtoml
     end
 end
@@ -236,8 +236,8 @@ macro upactions()
     script_copy_paste = copymyfiles_script(repo0, repo1)
     script_upprojtoml = updateprojtoml_script(repo1, "") # Modify Project.toml by add [extras] and [targets] for the scope of Test.
     return quote
-        $script_to_exe;
-        $script_copy_paste;
+        $script_to_exe
+        $script_copy_paste
         rm($tempdir, recursive=true)
         $script_upprojtoml
     end
