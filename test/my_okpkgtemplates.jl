@@ -1,4 +1,5 @@
 using TOML, Pkg
+using InteractiveUtils # I don't know why this is required for subtypes to be able to used
 
 @testset "my_okpkgtempaltes.jl" begin
     my_okpkgtemplate_dir = OkPkgTemplates.my_okpkgtemplate_dir
@@ -42,7 +43,7 @@ using TOML, Pkg
         # @eval $expr_using
 
 
-        ex = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build)
+        ex = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build, TID)
         @eval(OkPkgTemplates, $ex) # ex must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
 
         # expr_update = quote

@@ -24,8 +24,9 @@ end
 
 
 struct GeneralReg <: TemplateIdentifier end
+GeneralReg() = [pkgtemplating_gereg, updateprojtoml_script]
 
 macro genpkg(yourpkgname::String, ::Type{GeneralReg})
     dest = chkdest()
-    return genpkg(dest, yourpkgname, pkgtemplating_gereg, updateprojtoml_script)
+    return genpkg(dest, yourpkgname, GeneralReg()...)
 end

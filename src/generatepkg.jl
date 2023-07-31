@@ -1,5 +1,5 @@
 """
-`upactions(pwd1::String, pkgname::String)` return expression for
+`upactions(pwd1::String, pkgname::String, TI::Type{<:TemplateIdentifier})` return expression for
 replacing Github Actions (all the files in `.github/workflows`) with the latest version that generated from `OkPkgTemplates`.
 
 This function is separated for test purpose. For user, please use `@upactions`.
@@ -17,25 +17,26 @@ ex = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build)
 - `copymyfiles_script`
 - `updateprojtoml_script`
 """
-function upactions(pwd1::String, pkgname::String)
+function upactions(pwd1::String, pkgname::String, TI::Type{<:TemplateIdentifier}) #
     tempdir = joinpath(pwd1, "TEMPR_$(Random.randstring(10))")
     @info "Update CI actions in $pwd1; temporary working directory is $(tempdir); targeting package $pkgname"
-    script_to_exe = pkgtemplating_okreg(tempdir, pkgname) # at tempdir, make package pkgname.
+
+    genfns = [f(tempdir, pkgname) for f in TI()] # The scripts that @genpkg did.
+
     repo0 = joinpath(tempdir, pkgname)
     repo1 = pwd1
     script_copy_paste = copymyfiles_script(repo0, repo1)
     script_upprojtoml = updateprojtoml_script(repo1, "") # Modify Project.toml by add [extras] and [targets] for the scope of Test.
-    return quote
-        $script_to_exe
-        $script_copy_paste
+    script_rm = quote
         rm($tempdir, recursive=true)
-        $script_upprojtoml
     end
+    return Expr(:block, genfns..., script_copy_paste, script_rm, script_upprojtoml)
+
 end
 
 
 """
-`@upactions(mod::Module)` update CIs using `upactions` referencing the path of `mod`. See `upactions`.
+`@upactions(mod::Module, TI::Type{<:TemplateIdentifier})` update CIs using `upactions` referencing the path of `mod`. See `upactions`.
 
 # Example
 ```julia
@@ -43,10 +44,10 @@ using MyPkgWhereCIToBeUpdated
 @upactions MyPkgWhereCIToBeUpdated
 ```
 """
-macro upactions(mod::Module)
+macro upactions(mod::Module, TI::Type{<:TemplateIdentifier})
     pwd1 = pathof(mod) |> dirname |> dirname
     pkgname = string(mod)
-    ex = upactions(pwd1, pkgname)
+    ex = upactions(pwd1, pkgname, TI)
     return ex
 end
 
@@ -61,10 +62,10 @@ end
 @upactions
 ```
 """
-macro upactions()
+macro upactions(TI::Type{<:TemplateIdentifier})
     pkgenv = Pkg.Types.Context().env
     project_file_path = pkgenv.project_file
     pwd1 = dirname(project_file_path)
-    ex = upactions(pwd1, pkgenv.pkg.name) # Currently activated environment
+    ex = upactions(pwd1, pkgenv.pkg.name, TI) # Currently activated environment
     return ex
 end

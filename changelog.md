@@ -36,3 +36,7 @@ Read the `changelog.md` as a part of the release note.
 ## v0.5.0
 
 - julia version compatibility to 1.9
+
+## v0.6.0
+
+- Interface of `@genpkg` has changed.

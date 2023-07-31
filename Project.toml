@@ -1,7 +1,7 @@
 name = "OkPkgTemplates"
 uuid = "38290ba8-8fbe-457b-bf75-0e4980da3840"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.5.1"
+version = "0.6.0"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -21,6 +21,7 @@ CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
+InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
 [targets]
-test = ["Test", "Documenter", "CompatHelperLocal", "TOML"]
+test = ["Test", "Documenter", "CompatHelperLocal", "TOML", "InteractiveUtils"]
