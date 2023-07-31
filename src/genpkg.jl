@@ -16,7 +16,7 @@ end
 
 # Example
 ```jldoctest
-@sayhello3 "Bruce Willey"
+OkPkgTemplates.@sayhello3 "Bruce Willey"
 
 # output
 "Hello world! Bruce Willey"
@@ -44,7 +44,7 @@ name = "Bruce Willey"
 ```
 
 ```jldoctest bw1
-julia> @sayhello3 \$name
+julia> OkPkgTemplates.@sayhello3 \$name
 ERROR: UndefVarError: `name` not defined
 ```
 
@@ -55,7 +55,7 @@ ERROR: UndefVarError: `name` not defined
 
 # Example: a creative application
 ```jldoctest
-@sayhello3 name = "Bruce Willey"
+OkPkgTemplates.@sayhello3 name = "Bruce Willey"
 
 # output
 "Hello world! Bruce Willey"
@@ -70,7 +70,7 @@ ERROR: UndefVarError: `name` not defined
 # Example 3: Use `@eval` if you want `name` be evaluated
 
 ```jldoctest bw1
-@eval @sayhello3 \$name
+@eval OkPkgTemplates.@sayhello3 \$name
 
 # output
 "Hello world! Bruce Willey"
@@ -95,7 +95,7 @@ end
 # Example: A single the runtime variable is rendered as `Symbol`
 ```jldoctest
 name = "Bruce Willey"
-@sayhello3 name
+OkPkgTemplates.@sayhello3 name
 
 # output
 "Hello world! name"
