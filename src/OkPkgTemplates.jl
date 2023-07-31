@@ -2,7 +2,8 @@ module OkPkgTemplates
 
 # Write your package code here.
 using PkgTemplates, Pkg, Dates
-
+include("genpkg.jl")
+export @sayhello3
 include("mypkgtemplates.jl")
 include("myokplugins.jl")
 include("mydefaults.jl")

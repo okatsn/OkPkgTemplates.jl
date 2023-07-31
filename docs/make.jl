@@ -12,14 +12,16 @@ makedocs(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://okatsn.github.io/OkPkgTemplates.jl",
         edit_link="main",
-        assets=String[],
+        assets=String[]
     ),
     pages=[
         "Home" => "index.md",
-    ],
+        "Keynote" =>
+            ["Macro call explained" => "sayhello.md"]
+    ]
 )
 
 deploydocs(;
     repo="github.com/okatsn/OkPkgTemplates.jl",
-    devbranch="main",
+    devbranch="main"
 )
