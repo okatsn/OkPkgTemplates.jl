@@ -15,8 +15,8 @@ using TOML, Pkg
 
 
     # # Test @genpkg
-    default_dest = pwd()
-    OkPkgTemplates.DEFAULT_DESTINATION() = default_dest
+    dir_test_proj_env = pwd()
+    OkPkgTemplates.DEFAULT_DESTINATION() = dir_test_proj_env
     pkgname2build = "HelloWorldX12349981"
     dir_targetfolder(args...) = joinpath(OkPkgTemplates.DEFAULT_DESTINATION(), pkgname2build, args...)
 
@@ -50,6 +50,7 @@ using TOML, Pkg
 
     # @eval
     @test haskey(project_toml["extras"], "CompatHelperLocal") # make sure update_project_toml! works properly.
+
 
     # remove the package
     rm(pkgname2build, recursive=true)
