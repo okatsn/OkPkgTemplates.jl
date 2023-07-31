@@ -157,13 +157,14 @@ and then generate the Package
 macro genpkg(yourpkgname::String)
     dest = chkdest()
     @info "Targeting: $(joinpath(dest, yourpkgname))."
-    script_to_exe = pkgtemplating_script(dest, yourpkgname)
+    script_to_exe = pkgtemplating_okreg(dest, yourpkgname)
     script_upprojtoml = updateprojtoml_script(dest, yourpkgname)
     return Expr(:block,
         script_to_exe,
         script_upprojtoml
     )
 end
+
 
 """
 `upactions(pwd1::String, pkgname::String)` return expression for
@@ -187,7 +188,7 @@ ex = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build)
 function upactions(pwd1::String, pkgname::String)
     tempdir = joinpath(pwd1, "TEMPR_$(Random.randstring(10))")
     @info "Update CI actions in $pwd1; temporary working directory is $(tempdir); targeting package $pkgname"
-    script_to_exe = pkgtemplating_script(tempdir, pkgname) # at tempdir, make package pkgname.
+    script_to_exe = pkgtemplating_okreg(tempdir, pkgname) # at tempdir, make package pkgname.
     repo0 = joinpath(tempdir, pkgname)
     repo1 = pwd1
     script_copy_paste = copymyfiles_script(repo0, repo1)

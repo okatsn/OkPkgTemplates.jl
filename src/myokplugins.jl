@@ -54,6 +54,31 @@ const commit_msg = "github.event.client_payload.commit_msg"
 """
 const logfile_msg = "github.event.client_payload.logfile_msg"
 
+function tagbot_changelog()
+    """
+    ## {{ package }} {{ version }}
+    \${{ $logfile_msg }}
+    {% if previous_release %}
+    [Diff since {{ previous_release }}]({{ compare_url }})
+    {% endif %}
+    {% if custom %}
+    {{ custom }}
+    {% endif %}
+    {% if issues %}
+    **Closed issues:**
+    {% for issue in issues %}
+    - {{ issue.title }} (#{{ issue.number }})
+    {% endfor %}
+    {% endif %}
+    {% if pulls %}
+    **Merged pull requests:**
+    {% for pull in pulls %}
+    - {{ pull.title }} (#{{ pull.number }}) (@{{ pull.author.username }})
+    {% endfor %}
+    {% endif %}
+    """
+end
+
 
 PLUGIN_README() = PkgTemplates.Readme(; file=my_okpkgtemplate_dir("README.md"), destination="README.md")
 
@@ -84,28 +109,7 @@ Also see
 
 """
 PLUGIN_TAGBOT() = TagBot(; registry="okatsn/OkRegistry",
-    changelog="""
-  ## {{ package }} {{ version }}
-  \${{ $logfile_msg }}
-  {% if previous_release %}
-  [Diff since {{ previous_release }}]({{ compare_url }})
-  {% endif %}
-  {% if custom %}
-  {{ custom }}
-  {% endif %}
-  {% if issues %}
-  **Closed issues:**
-  {% for issue in issues %}
-  - {{ issue.title }} (#{{ issue.number }})
-  {% endfor %}
-  {% endif %}
-  {% if pulls %}
-  **Merged pull requests:**
-  {% for pull in pulls %}
-  - {{ pull.title }} (#{{ pull.number }}) (@{{ pull.author.username }})
-  {% endfor %}
-  {% endif %}
-  """,
+    changelog=tagbot_changelog(),
     file=my_okpkgtemplate_dir("github", "workflows", "TagBot.yml"))
 
 # Test

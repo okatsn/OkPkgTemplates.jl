@@ -23,6 +23,7 @@ using TOML, Markdown
 import Random
 # template_**.jl uses **plugins.jl
 include("templates/template_okreg.jl")
+include("templates/template_gereg.jl")
 include("generatepkg.jl") # @genpkg uses templates/**
 export @genpkg, @upactions
 

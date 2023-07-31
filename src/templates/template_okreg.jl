@@ -1,11 +1,11 @@
 """
-`pkgtemplating_script(dest, yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) to be executed at the scope that the macro is called.
+`pkgtemplating_okreg(dest, yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) to be executed at the scope that the macro is called.
 
 It
 - creates a package using `PkgTemplates.Templates`
 - `add Documenter, CompatHelperLocal, Test` into `Project.toml`
 """
-pkgtemplating_script(dest, yourpkgname) = quote
+pkgtemplating_okreg(dest, yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
         dir=$dest,
