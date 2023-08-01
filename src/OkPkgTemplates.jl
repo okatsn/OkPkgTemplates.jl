@@ -29,4 +29,7 @@ include("templates/template_gereg.jl")
 include("generatepkg.jl") # @genpkg uses templates/**
 export @genpkg, @upactions, OkReg, GeneralReg
 
+include("interface.jl")
+export update
+
 end
