@@ -53,7 +53,7 @@ Hello.@f45brutal
 Hello.x
 ```
 
-Noted that this is true for `Main` scope.
+Error occurred in `Hello.@f45brutal` because `Hello.f` is not defined. Noted that this is true for `Main` scope; yuo can redefine variables/functions under the `Main` scope this way.
 
 !!! tip "Tips"
     - Multiline `quote ... end` is in fact `Expr(:block, ex1, ex2, ...)`

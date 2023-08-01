@@ -14,8 +14,13 @@ mypkgtemplate_dir(paths::AbstractString...) = joinpath(DEFAULT_TEMPLATE_DIR[], p
 `chkdest()` return `Pkg.devdir()` if `DEFAULT_DESTINATION()` is empty.
 """
 function chkdest()
-    ifelse(
+    dest = ifelse(
         isempty(DEFAULT_DESTINATION()),
-            Pkg.devdir(),
-            DEFAULT_DESTINATION())
+        Pkg.devdir(),
+        DEFAULT_DESTINATION())
+    # CHECKPOINT: make `chkdest` a `macro` in which `OkPkgTemplates.DEFAULT_DESTINATION() = dest`
+    # - This is the only utility that needs macro.
+    # - `Pkg.Types.Context().env` and `pathof(mod)` seems to work fine in both function and macro. See `whereami`
+
+
 end
