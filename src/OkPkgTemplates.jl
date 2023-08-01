@@ -1,8 +1,11 @@
 module OkPkgTemplates
+# Test
+include("docs_src_sayhello_md_related/sayhello.jl")
+include("docs_src_sayhello_md_related/whereami.jl")
+
 
 # Write your package code here.
 using PkgTemplates, Pkg, Dates
-include("sayhello.jl")
 include("mypkgtemplates.jl")
 include("myokplugins.jl")
 include("mydefaults.jl")
