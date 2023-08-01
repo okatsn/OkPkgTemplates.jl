@@ -1,5 +1,7 @@
 """
-Overwrite/Update Github actions of the repository of the currently activated julia package; make sure they are under version control that the process can be reverted.
+`update` execute expressions returned by `upactions` one-by-one.
+
+Running `update` overwrite/update Github actions of the repository of the currently activated julia package; make sure they are under version control that the process can be reverted.
 
 # Example
 
@@ -18,7 +20,10 @@ julia> update(GeneralReg)
 ```
 """
 function update(TId::Type{<:TemplateIdentifier})
-    @eval @upactions $TId
+    exprs = upactions(TId)
+    for ex in exprs
+        @eval $ex
+    end
 end
 
 """

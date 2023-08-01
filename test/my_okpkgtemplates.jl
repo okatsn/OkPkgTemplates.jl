@@ -43,14 +43,12 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
         # @eval $expr_using
 
 
-        ex = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build, TID)
-        @eval(OkPkgTemplates, $ex) # ex must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
+        exprs = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build, TID)
+        for ex in exprs
+            @eval(OkPkgTemplates, $ex)
+        end
+        # ex must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
 
-        # expr_update = quote
-        #     @upactions $symb_targetpkg
-        # end
-
-        # @eval
         @test haskey(project_toml["extras"], "CompatHelperLocal") # make sure update_project_toml! works properly.
 
 

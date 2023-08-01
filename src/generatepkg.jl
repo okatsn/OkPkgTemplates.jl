@@ -2,12 +2,13 @@
 `upactions(pwd1::String, pkgname::String, TI::Type{<:TemplateIdentifier})` return expression for
 replacing Github Actions (all the files in `.github/workflows`) with the latest version that generated from `OkPkgTemplates`.
 
-This function is separated for test purpose. For user, please use `@upactions`.
-
 # Example
-```julia
-ex = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build)
-@eval(OkPkgTemplates, \$ex) # expression must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
+```@example
+exprs = OkPkgTemplates.upactions(dir_targetfolder(), pkgname2build)
+for ex in exprs
+    @eval(OkPkgTemplates, \$ex)
+    # expression must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
+end
 ```
 
 !!! warning
@@ -30,22 +31,24 @@ function upactions(pwd1::String, pkgname::String, TI::Type{<:TemplateIdentifier}
     script_rm = quote
         rm($tempdir, recursive=true)
     end
-    return Expr(:block, genfns..., script_copy_paste, script_rm, script_upprojtoml)
+    return [genfns..., script_copy_paste, script_rm, script_upprojtoml]
 
 end
 
 
 """
-`@upactions(mod::Module, TI::Type{<:TemplateIdentifier})` update CIs using `upactions` referencing the path of `mod`. See `upactions`.
+`upactions(mod::Module, TI::Type{<:TemplateIdentifier})` return expressions for updating CIs, referencing the path of `mod`. See `upactions`.
 
 # Example
-```julia
+```@example
 using MyPkgWhereCIToBeUpdated
-@eval @upactions \$MyPkgWhereCIToBeUpdated \$GeneralReg
-# execute `@upactions` whth `GeneralReg` evaluated as `Type{<:TemplateIdentifier}` and `MyPkgWhereCIToBeUpdated` evaluated as `Module`.
+exprs = upactions(\$MyPkgWhereCIToBeUpdated \$GeneralReg)
+for ex in exprs
+    @eval(OkPkgTemplates, \$ex)
+end
 ```
 """
-macro upactions(mod::Module, TI::Type{<:TemplateIdentifier})
+function upactions(mod::Module, TI::Type{<:TemplateIdentifier})
     pwd1 = pathof(mod) |> dirname |> dirname
     pkgname = string(mod)
     ex = upactions(pwd1, pkgname, TI)
@@ -55,16 +58,9 @@ end
 
 
 """
-`@upactions` update CIs using `upactions` referencing the path of the current activated project environment. See `upactions`.
-
-
-# Example
-```julia
-@eval @upactions \$GeneralReg
-# execute `@upactions` whth `GeneralReg` evaluated as `Type{<:TemplateIdentifier}`
-```
+`upactions` return expressions for updating CIs using `upactions` referencing the path of the current activated project environment.
 """
-macro upactions(TI::Type{<:TemplateIdentifier})
+function upactions(TI::Type{<:TemplateIdentifier})
     pkgenv = Pkg.Types.Context().env
     project_file_path = pkgenv.project_file
     pwd1 = dirname(project_file_path)
