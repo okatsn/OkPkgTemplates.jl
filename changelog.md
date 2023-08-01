@@ -40,3 +40,8 @@ Read the `changelog.md` as a part of the release note.
 ## v0.6.0
 
 - Interface of `@genpkg` has changed.
+
+## v0.6.1
+
+- Interface of `@upactions` has changed.
+- A fatal error fixed.

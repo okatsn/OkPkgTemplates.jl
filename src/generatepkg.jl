@@ -41,7 +41,8 @@ end
 # Example
 ```julia
 using MyPkgWhereCIToBeUpdated
-@upactions MyPkgWhereCIToBeUpdated
+@eval @upactions \$MyPkgWhereCIToBeUpdated \$GeneralReg
+# execute `@upactions` whth `GeneralReg` evaluated as `Type{<:TemplateIdentifier}` and `MyPkgWhereCIToBeUpdated` evaluated as `Module`.
 ```
 """
 macro upactions(mod::Module, TI::Type{<:TemplateIdentifier})
@@ -59,7 +60,8 @@ end
 
 # Example
 ```julia
-@upactions
+@eval @upactions \$GeneralReg
+# execute `@upactions` whth `GeneralReg` evaluated as `Type{<:TemplateIdentifier}`
 ```
 """
 macro upactions(TI::Type{<:TemplateIdentifier})

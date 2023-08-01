@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-    tags: ['*']
+    tags: ["*"]
   pull_request:
 concurrency:
   # Skip intermediate builds: always.
@@ -22,13 +22,17 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.8'
-          - 'nightly'
+          - "1.8"
+          - "nightly"
         os:
           - ubuntu-latest
         arch:
           - x64
     steps:
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
+        # This step is required since in a process that creates a git repo is going to be tested; thus, Git should be configured
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
         with:
@@ -51,7 +55,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
         with:
-          version: '1'
+          version: "1"
       - uses: okatsn/add-registry@v1
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-docdeploy@v1
