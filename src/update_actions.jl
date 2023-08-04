@@ -4,12 +4,13 @@
 `upactions(mod::Module, TI::Type{<:TemplateIdentifier})` return expressions for updating CIs, referencing the path of `mod`.
 
 # Example
-```@example
+```
 using MyPkgWhereCIToBeUpdated
 exprs = upactions(\$MyPkgWhereCIToBeUpdated \$GeneralReg)
 for ex in exprs
     @eval(OkPkgTemplates, \$ex)
 end
+```
 
 !!! warning
     - Make sure all your action files (all the files in `.github/workflows`) is under the control of git for safety.
@@ -18,7 +19,6 @@ end
 - `copymyfiles_script`
 - `updateprojtoml_script`
 
-```
 """
 function upactions(repo1, pkgname, TI::Type{<:TemplateIdentifier})
     tempdir = joinpath(repo1, "TEMPR_$(Random.randstring(10))")
@@ -41,7 +41,8 @@ function upactions(repo1, pkgname, TI::Type{<:TemplateIdentifier})
     script_rm = quote
         rm($tempdir, recursive=true)
     end
-    return [expr0, genfns..., script_copy_paste, script_rm, script_upprojtoml, expr999]
+    exprs = letin.([expr0, genfns..., script_copy_paste, script_rm, script_upprojtoml, expr999])
+    return Expr(:block, exprs...)
 end
 
 function upactions(mod::Module, TI)
@@ -61,6 +62,5 @@ function upactions(TI::Type{<:TemplateIdentifier})
     pkgenv = Pkg.Types.Context().env
     project_file_path = pkgenv.project_file
     repo1 = dirname(project_file_path)
-    ex = upactions(repo1, pkgenv.pkg.name, TI) # Currently activated environment
-    return ex
+    upactions(repo1, pkgenv.pkg.name, TI) # Currently activated environment
 end

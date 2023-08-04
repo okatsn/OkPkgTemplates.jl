@@ -42,11 +42,9 @@ julia> using OkPkgTemplates
 julia> update(GeneralReg)
 ```
 """
-function update(TId::Type{<:TemplateIdentifier})
-    exprs = upactions(TId)
-    for ex in exprs
-        @eval $ex
-    end
+function update(args...)
+    expr = upactions(args...)
+    @eval $expr
 end
 
 

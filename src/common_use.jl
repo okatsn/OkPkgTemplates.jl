@@ -115,3 +115,25 @@ function copymyfiles_script(hello)
 end
 # KEYNOTE: ./test/Project.toml is not created since in general case you will also require dependencies in ./Project.toml
 # See https://pkgdocs.julialang.org/v1/creating-packages/#Test-specific-dependencies-in-Julia-1.2-and-above
+
+
+function letin(expr)
+    quote
+        let
+            $expr
+        end
+    end
+end
+
+# function safejoin(exprs...)
+#     let0 = quote
+#         let
+#         end
+#     let = quote
+#     end
+#             end
+#     safeexpr = [Expr(:block,
+
+#     )]
+
+# end

@@ -82,6 +82,7 @@ genpkg("MyNewProject", OkReg)
 """
 function genpkg(yourpkgname, fs...)
     exprs = [f(yourpkgname) for f in fs]
+    exprs = letin.(exprs)
     return Expr(:block, exprs...)
 end
 
