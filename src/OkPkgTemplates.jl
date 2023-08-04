@@ -25,6 +25,7 @@ export stringscore
 using TOML, Markdown
 import Random
 # general genpkg function
+include("common_use.jl")
 include("generate_actions.jl")
 # template_**.jl uses **plugins.jl
 include("templates/template_okreg.jl")
