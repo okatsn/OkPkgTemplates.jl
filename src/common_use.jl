@@ -48,7 +48,7 @@ updateprojtoml_script(yourpkgname) = quote
         return d
     end
 
-    projtoml_path = joinpath(DEFAULT_DESTINATION, $yourpkgname, "Project.toml")
+    projtoml_path = joinpath(OkPkgTemplates.DEFAULT_DESTINATION, $yourpkgname, "Project.toml")
     d = TOML.parsefile(projtoml_path)
     update_project_toml!(d)
 
@@ -62,7 +62,7 @@ updateprojtoml_script(yourpkgname) = quote
     - Initiating the project.
     """
 
-    changelog_file = joinpath(DEFAULT_DESTINATION, $yourpkgname, "changelog.md")
+    changelog_file = joinpath(OkPkgTemplates.DEFAULT_DESTINATION, $yourpkgname, "changelog.md")
     if !isfile(changelog_file)
         open(changelog_file, "w") do io
             write(io, string(cglog))

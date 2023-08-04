@@ -8,7 +8,7 @@ It
 pkgtemplating_okreg(yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
-        dir=DEFAULT_DESTINATION,
+        dir=OkPkgTemplates.DEFAULT_DESTINATION,
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),

@@ -12,10 +12,10 @@ mypkgtemplate_dir(paths::AbstractString...) = joinpath(DEFAULT_TEMPLATE_DIR[], p
 
 """
 `@chkdest` check whether `OkPkgTemplates.DEFAULT_DESTINATION` is defined.
-It define `OkPkgTemplates.DEFAULT_DESTINATION = Pkg.devdir()` if `DEFAULT_DESTINATION` is empty.
+It define `OkPkgTemplates.DEFAULT_DESTINATION = Pkg.devdir()` if `OkPkgTemplates.DEFAULT_DESTINATION` is empty.
 """
 macro chkdest()
-    if isempty(DEFAULT_DESTINATION)
+    if isempty(OkPkgTemplates.DEFAULT_DESTINATION)
         expr = quote
             dest = Pkg.devdir()
             OkPkgTemplates.DEFAULT_DESTINATION = dest
@@ -23,11 +23,11 @@ macro chkdest()
         end
     else
         expr = quote
-            dest = DEFAULT_DESTINATION
+            dest = OkPkgTemplates.DEFAULT_DESTINATION
         end
     end
     return quote
-        @info "I'm in chkdest, where DEFAULT_DESTINATION is $(DEFAULT_DESTINATION)"
+        @info "I'm in chkdest, where OkPkgTemplates.DEFAULT_DESTINATION is $(OkPkgTemplates.DEFAULT_DESTINATION)"
         $expr
     end
     # for `return $expr`,

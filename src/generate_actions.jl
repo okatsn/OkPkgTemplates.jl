@@ -15,7 +15,7 @@ struct XXX <: TemplateIdentifier end
 pkgtemplating_xxx(yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
-        dir=DEFAULT_DESTINATION,
+        dir=OkPkgTemplates.DEFAULT_DESTINATION,
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),
@@ -61,7 +61,7 @@ Please define `OkPkgTemplates.DEFAULT_**` for changing defaults.
 
 
 # Example
-To specify output destination, redefine `DEFAULT_DESTINATION`
+To specify output destination, redefine `OkPkgTemplates.DEFAULT_DESTINATION`
 ```
 OkPkgTemplates.DEFAULT_DESTINATION = pwd()
 ```
