@@ -26,7 +26,10 @@ macro chkdest()
             dest = DEFAULT_DESTINATION
         end
     end
-    return expr
+    return quote
+        @info "I'm in chkdest, where DEFAULT_DESTINATION is $(DEFAULT_DESTINATION)"
+        $expr
+    end
     # for `return $expr`,
     # ERROR: Global method definition around needs to be placed at the top level, or use "eval".
 

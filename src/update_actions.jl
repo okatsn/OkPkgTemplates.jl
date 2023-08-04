@@ -21,7 +21,8 @@ end
 
 """
 function upactions(repo1, pkgname, TI::Type{<:TemplateIdentifier})
-    tempdir = joinpath(repo1, "TEMPR_$(Random.randstring(10))")
+    tempdir = abspath(mktempdir())
+    @info "I'm upactions"
     repo0 = joinpath(tempdir, pkgname) # e.g., ./TEMPR_XXXXXX/TargetPackage
     tempdevdir = dirname(repo0)
     expr0 = quote
@@ -41,8 +42,13 @@ function upactions(repo1, pkgname, TI::Type{<:TemplateIdentifier})
     script_rm = quote
         rm($tempdir, recursive=true)
     end
-    exprs = letin.([expr0, genfns..., script_copy_paste, script_rm, script_upprojtoml, expr999])
-    return Expr(:block, exprs...)
+    copy_paste_rm_update = [script_copy_paste, script_rm, script_upprojtoml]
+    return Expr(:block,
+        expr0,
+        letin.(genfns)...,
+        expr999,
+        letin.(copy_paste_rm_update)...,
+    )
 end
 
 function upactions(mod::Module, TI)

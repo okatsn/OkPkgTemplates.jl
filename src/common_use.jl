@@ -8,6 +8,7 @@ add `"Documenter", "CompatHelperLocal"` to `[extras]` and `[targets]` as `runtes
 It modify `Project.toml` by add [extras] and [targets] for the scope of Test.
 """
 updateprojtoml_script(yourpkgname) = quote
+    @info "I'm updateprojtoml_script. OkPkgTemplates.DEFAULT_DESTINATION: $(OkPkgTemplates.DEFAULT_DESTINATION)"
 
     function ordering(str)
         d = Dict(
@@ -84,6 +85,7 @@ List of files:
 """
 function copymyfiles_script(hello)
     return quote
+        @info "I'm copymyfiles_script"
         srcs = String[]
         dsts = String[]
 

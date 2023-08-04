@@ -62,7 +62,7 @@ Please define `OkPkgTemplates.DEFAULT_**` for changing defaults.
 
 # Example
 To specify output destination, redefine `DEFAULT_DESTINATION`
-```julia
+```
 OkPkgTemplates.DEFAULT_DESTINATION = pwd()
 ```
 
@@ -80,7 +80,7 @@ genpkg("MyNewProject", OkReg)
 - `updateprojtoml_script`
 
 """
-function genpkg(yourpkgname, fs...)
+function genpkg(yourpkgname, fs::Function...)
     exprs = [f(yourpkgname) for f in fs]
     exprs = letin.(exprs)
     return Expr(:block, exprs...)
@@ -90,7 +90,6 @@ end
 `genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})` call `@chkdest`, and fall back to `genpkg(yourpkgname, get_exprs(tp)...)`.
 """
 function genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})
-    @chkdest
     genpkg(yourpkgname, get_exprs(tp)...)
 end
 
