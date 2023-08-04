@@ -16,15 +16,17 @@ It define `OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()` if `DEFAULT_DEST
 """
 macro chkdest()
     if isempty(DEFAULT_DESTINATION())
-        dest = Pkg.devdir()
         expr = quote
-            OkPkgTemplates.DEFAULT_DESTINATION() = $dest
+            dest = Pkg.devdir()
+            OkPkgTemplates.DEFAULT_DESTINATION() = dest
+            dest
         end
-        @eval(OkPkgTemplates, expr)
     else
-        dest = DEFAULT_DESTINATION()
+        expr = quote
+            dest = DEFAULT_DESTINATION()
+        end
     end
-    return :($dest)
+    return expr
     # for `return $expr`,
     # ERROR: Global method definition around needs to be placed at the top level, or use "eval".
 

@@ -9,10 +9,10 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
     @test isfile(my_okpkgtemplate_dir("github", "workflows", "CI.yml"))
 
     if haskey(ENV, "JULIA_PKG_DEVDIR")
-        @test OkPkgTemplates.chkdest() == ENV["JULIA_PKG_DEVDIR"]
+        @test OkPkgTemplates.@chkdest() == ENV["JULIA_PKG_DEVDIR"]
     end
 
-    @test OkPkgTemplates.chkdest() == Pkg.devdir()
+    @test OkPkgTemplates.@chkdest() == Pkg.devdir()
 
 
     # # Test genpkg
