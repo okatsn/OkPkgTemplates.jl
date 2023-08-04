@@ -19,13 +19,13 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
     dir_test_proj_env = pwd()
     OkPkgTemplates.DEFAULT_DESTINATION = dir_test_proj_env
     pkgname2build = "HelloWorldX12349981"
-    dir_targetfolder(args...) = joinpath(OkPkgTemplates.DEFAULT_DESTINATION, pkgname2build, args...)
+    dir_targetfolder(args...) = joinpath(OkPkgTemplates.DEFAULT_DESTINATION, pkgname2build, args...) # noted that in `genpkg` pkgname2build is joinpathed with DEFAULT_DESTINATION.
 
     @info "Trying to generate package at: $(dir_targetfolder())"
 
     for TID in subtypes(OkPkgTemplates.TemplateIdentifier)
         # generate package
-        genpkg(pkgname2build, TID)
+        OkPkgTemplates.generate(pkgname2build, TID)
         # test if file/dir exists
         @test isdir(dir_targetfolder())
         @test isfile(dir_targetfolder("Project.toml"))
@@ -53,7 +53,7 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
 
 
         # remove the package
-        rm(pkgname2build, recursive=true)
+        rm(dir_targetfolder(), recursive=true)
         @test !isdir(dir_targetfolder())
     end
 end

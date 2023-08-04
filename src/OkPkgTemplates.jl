@@ -33,6 +33,6 @@ include("generatepkg.jl")
 export genpkg, @upactions, OkReg, GeneralReg
 
 include("interface.jl")
-export update
+export update, generate
 
 end

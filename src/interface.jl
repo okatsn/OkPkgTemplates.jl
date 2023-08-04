@@ -53,3 +53,12 @@ julia> update(OkFiles, GeneralReg)
 function update(mod::Module, TId::Type{<:TemplateIdentifier})
     @eval @upactions $mod $TId
 end
+
+
+"""
+`generate(args...)` evaluate the *expressions* returned by `genpkg`, and it takes exactly the same argument as `genpkg`.
+"""
+function generate(args...)
+    expr = genpkg(args...)
+    @eval $expr
+end
