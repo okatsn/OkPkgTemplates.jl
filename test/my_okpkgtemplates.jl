@@ -53,7 +53,6 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
         update(dir_targetfolder(), pkgname2build, TID)
         # ex must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
         @test dir_test_proj_env == OkPkgTemplates.DEFAULT_DESTINATION() # make sure OkPkgTemplates.DEFAULT_DESTINATION() does not modified
-        # CHECKPOINT: test failed here
 
         @test haskey(project_toml["extras"], "CompatHelperLocal") # make sure update_project_toml! works properly.
 
