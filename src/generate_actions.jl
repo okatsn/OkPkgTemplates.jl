@@ -183,31 +183,35 @@ List of files:
 - All files under `.github/workflows`
 -
 """
-copymyfiles_script(repo0, repo1) = quote
-    srcs = String[]
-    dsts = String[]
+function copymyfiles_script(hello)
+    return quote
+        srcs = String[]
+        dsts = String[]
 
-    # Github actions
-    srcdir_gitact = joinpath($repo0, ".github", "workflows")
-    githubfiles = readdir(srcdir_gitact) # todo: consider use OkFiles to use regular expression to copy only the yml
+        repo0 = $(hello.repo0)
+        repo1 = $(hello.repo1)
+        # Github actions
+        srcdir_gitact = joinpath(repo0, ".github", "workflows")
+        githubfiles = readdir(srcdir_gitact) # todo: consider use OkFiles to use regular expression to copy only the yml
 
-    dstdir_gitact = joinpath($repo1, ".github", "workflows")
+        dstdir_gitact = joinpath(repo1, ".github", "workflows")
 
-    push!(srcs, joinpath.(srcdir_gitact, githubfiles)...)
-    push!(dsts, joinpath.(dstdir_gitact, githubfiles)...)
+        push!(srcs, joinpath.(srcdir_gitact, githubfiles)...)
+        push!(dsts, joinpath.(dstdir_gitact, githubfiles)...)
 
-    # Test files
-    testfiles = ["runtests.jl"]
-    push!(srcs, joinpath.($repo0, "test", testfiles)...)
-    push!(dsts, joinpath.($repo1, "test", testfiles)...)
-    cp.(srcs, dsts; force=true)
+        # Test files
+        testfiles = ["runtests.jl"]
+        push!(srcs, joinpath.(repo0, "test", testfiles)...)
+        push!(dsts, joinpath.(repo1, "test", testfiles)...)
+        cp.(srcs, dsts; force=true)
 
-    try
-        changelog_file = joinpath($repo0, "changelog.md")
-        changelog_dest = joinpath($repo1, "changelog.md")
-        cp(changelog_file, changelog_dest; force=false)
-    catch
-        @info "changelog.md not availabe or already exists."
+        try
+            changelog_file = joinpath(repo0, "changelog.md")
+            changelog_dest = joinpath(repo1, "changelog.md")
+            cp(changelog_file, changelog_dest; force=false)
+        catch
+            @info "changelog.md not availabe or already exists."
+        end
     end
 end
 # KEYNOTE: ./test/Project.toml is not created since in general case you will also require dependencies in ./Project.toml
