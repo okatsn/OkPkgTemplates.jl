@@ -12,10 +12,10 @@ Inside OkPkgTemplates/src,
 struct XXX <: TemplateIdentifier end
 
 # 2
-pkgtemplating_xxx(dest, yourpkgname) = quote
+pkgtemplating_xxx(yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
-        dir=\$dest,
+        dir=DEFAULT_DESTINATION,
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),
@@ -80,19 +80,17 @@ genpkg("MyNewProject", OkReg)
 - `updateprojtoml_script`
 
 """
-function genpkg(dest, yourpkgname, fs...)
-    @info "Targeting: $(joinpath(dest, yourpkgname))."
-    exprs = [f(dest, yourpkgname) for f in fs]
+function genpkg(yourpkgname, fs...)
+    exprs = [f(yourpkgname) for f in fs]
     return Expr(:block, exprs...)
 end
 
 """
-`genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})` call `@chkdest`, obtain `dest = OkPkgTemplates.DEFAULT_DESTINATION` and fall back to `genpkg(dest, yourpkgname, get_exprs(tp)...)`.
+`genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})` call `@chkdest`, and fall back to `genpkg(yourpkgname, get_exprs(tp)...)`.
 """
 function genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})
     @chkdest
-    dest = OkPkgTemplates.DEFAULT_DESTINATION
-    genpkg(dest, yourpkgname, get_exprs(tp)...)
+    genpkg(yourpkgname, get_exprs(tp)...)
 end
 
 """
@@ -105,12 +103,12 @@ get_exprs(tp::Type{<:TemplateIdentifier}) = @error "Method `get_exprs` for `$tp`
 After making the template successfully,
 add `"Documenter", "CompatHelperLocal"` to `[extras]` and `[targets]` as `runtests.jl` (may) use them.
 
-`updateprojtoml_script(dest, yourpkgname)` creates script that
-`projtoml_path = joinpath(dest, yourpkgname, "Project.toml")` will be modified on execution.
+`updateprojtoml_script(yourpkgname)` *creates expressions* in which
+`projtoml_path = joinpath(OkPkgTemplates.DEFAULT_DESTINATION, yourpkgname, "Project.toml")`.
 
 It modify `Project.toml` by add [extras] and [targets] for the scope of Test.
 """
-updateprojtoml_script(dest, yourpkgname) = quote
+updateprojtoml_script(yourpkgname) = quote
 
     function ordering(str)
         d = Dict(
@@ -150,7 +148,7 @@ updateprojtoml_script(dest, yourpkgname) = quote
         return d
     end
 
-    projtoml_path = joinpath($dest, $yourpkgname, "Project.toml")
+    projtoml_path = joinpath(DEFAULT_DESTINATION, $yourpkgname, "Project.toml")
     d = TOML.parsefile(projtoml_path)
     update_project_toml!(d)
 
@@ -164,7 +162,7 @@ updateprojtoml_script(dest, yourpkgname) = quote
     - Initiating the project.
     """
 
-    changelog_file = joinpath($dest, $yourpkgname, "changelog.md")
+    changelog_file = joinpath(DEFAULT_DESTINATION, $yourpkgname, "changelog.md")
     if !isfile(changelog_file)
         open(changelog_file, "w") do io
             write(io, string(cglog))

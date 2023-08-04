@@ -1,14 +1,14 @@
 """
-`pkgtemplating_okreg(dest, yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) to be executed at the scope that the macro is called.
+`pkgtemplating_okreg(yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) to be executed at the scope that the macro is called.
 
 It
 - creates a package using `PkgTemplates.Templates`
 - `add Documenter, CompatHelperLocal, Test` into `Project.toml`
 """
-pkgtemplating_okreg(dest, yourpkgname) = quote
+pkgtemplating_okreg(yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
-        dir=$dest,
+        dir=DEFAULT_DESTINATION,
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),

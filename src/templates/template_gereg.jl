@@ -1,10 +1,10 @@
 """
-`pkgtemplating_gereg(dest, yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) for general registry.
+`pkgtemplating_gereg(yourpkgname)` returns the script of `PkgTemplates` (`quote ... end`) for general registry.
 """
-pkgtemplating_gereg(dest, yourpkgname) = quote
+pkgtemplating_gereg(yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
-        dir=$dest,
+        dir=DEFAULT_DESTINATION,
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),
