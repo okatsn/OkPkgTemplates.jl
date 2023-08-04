@@ -55,12 +55,13 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
         @test dir_test_proj_env == OkPkgTemplates.DEFAULT_DESTINATION() # make sure OkPkgTemplates.DEFAULT_DESTINATION() does not modified
 
         @test haskey(project_toml["extras"], "CompatHelperLocal") # make sure update_project_toml! works properly.
+        @test !isdir(DEFAULT_DESTINATION())
+        @test !isequal(DEFAULT_DESTINATION(), OkPkgTemplates.DEFAULT_DESTINATION())
 
 
         # remove the package
         rm(dir_targetfolder(), recursive=true)
         @test !isdir(dir_targetfolder())
-        @test !isdir(DEFAULT_DESTINATION())
         @test !isdir(dir_default_devdir(pkgname2build)) || dir_default_devdir(pkgname2build) # since I defined `OkPkgTemplates.DEFAULT_DESTINATION()` as the testing workding directory, thus the package should not be generated in default .julia/dev.
     end
 end
