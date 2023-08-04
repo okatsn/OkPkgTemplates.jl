@@ -25,11 +25,11 @@ export stringscore
 using TOML, Markdown
 import Random
 # general genpkg function
-include("generalgenpkg.jl")
+include("generate_pkgs.jl")
 # template_**.jl uses **plugins.jl
 include("templates/template_okreg.jl")
 include("templates/template_gereg.jl")
-include("generatepkg.jl")
+include("update_actions.jl")
 export genpkg, @upactions, OkReg, GeneralReg
 
 include("interface.jl")
