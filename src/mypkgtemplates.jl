@@ -17,12 +17,17 @@ It define `OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()` if `DEFAULT_DEST
 macro chkdest()
     if isempty(DEFAULT_DESTINATION())
         dest = Pkg.devdir()
+        expr = quote
+            OkPkgTemplates.DEFAULT_DESTINATION() = $dest
+        end
+        @eval(OkPkgTemplates, expr)
     else
         dest = DEFAULT_DESTINATION()
     end
-    return quote
-        OkPkgTemplates.DEFAULT_DESTINATION() = $dest
-    end
+    return :($dest)
+    # for `return $expr`,
+    # ERROR: Global method definition around needs to be placed at the top level, or use "eval".
+
     # CHECKPOINT: make `chkdest` a `macro` in which `OkPkgTemplates.DEFAULT_DESTINATION() = dest`
     # - This is the only utility that needs macro.
     # - `Pkg.Types.Context().env` and `pathof(mod)` seems to work fine in both function and macro. See `whereami`
