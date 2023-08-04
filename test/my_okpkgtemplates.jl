@@ -21,6 +21,8 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
     pkgname2build = "HelloWorldX12349981"
     dir_targetfolder(args...) = joinpath(OkPkgTemplates.DEFAULT_DESTINATION, pkgname2build, args...) # noted that in `genpkg` pkgname2build is joinpathed with DEFAULT_DESTINATION.
 
+    dir_default_devdir(args...) = joinpath(Pkg.devdir(), args...)
+
     @info "Trying to generate package at: $(dir_targetfolder())"
 
     for TID in subtypes(OkPkgTemplates.TemplateIdentifier)
@@ -28,6 +30,7 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
         OkPkgTemplates.generate(pkgname2build, TID)
         # test if file/dir exists
         @test isdir(dir_targetfolder())
+        @test !isdir(dir_default_devdir(pkgname2build)) # since I defined `OkPkgTemplates.DEFAULT_DESTINATION` as the testing workding directory, thus the package should not be generated in default .julia/dev.
         @test isfile(dir_targetfolder("Project.toml"))
         # test for package name
         project_toml = TOML.parsefile(dir_targetfolder("Project.toml"))
