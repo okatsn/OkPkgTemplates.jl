@@ -17,9 +17,9 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
 
     # # Test genpkg
     dir_test_proj_env = pwd()
-    OkPkgTemplates.DEFAULT_DESTINATION() = dir_test_proj_env
+    OkPkgTemplates.DEFAULT_DESTINATION = dir_test_proj_env
     pkgname2build = "HelloWorldX12349981"
-    dir_targetfolder(args...) = joinpath(OkPkgTemplates.DEFAULT_DESTINATION(), pkgname2build, args...)
+    dir_targetfolder(args...) = joinpath(OkPkgTemplates.DEFAULT_DESTINATION, pkgname2build, args...)
 
     @info "Trying to generate package at: $(dir_targetfolder())"
 

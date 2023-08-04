@@ -50,7 +50,7 @@ abstract type TemplateIdentifier end
 `genpkg(yourpkgname::String, fs...)` execute scripts `fs` one by one in user's scope using `OkPkgTemplates`'s utilities.
 
 Please define `OkPkgTemplates.DEFAULT_**` for changing defaults.
-- If `OkPkgTemplates.DEFAULT_DESTINATION()` is not defined, it is defined as `Pkg.devdir()` at user's scope in the first use.
+- If `OkPkgTemplates.DEFAULT_DESTINATION` is not defined, it is defined as `Pkg.devdir()` at user's scope in the first use.
 
 
 !!! tip
@@ -61,9 +61,9 @@ Please define `OkPkgTemplates.DEFAULT_**` for changing defaults.
 
 
 # Example
-To specify output destination, redefine `DEFAULT_DESTINATION()`
+To specify output destination, redefine `DEFAULT_DESTINATION`
 ```julia
-OkPkgTemplates.DEFAULT_DESTINATION() = pwd()
+OkPkgTemplates.DEFAULT_DESTINATION = pwd()
 ```
 
 and then generate the Package
@@ -87,11 +87,11 @@ function genpkg(dest, yourpkgname, fs...)
 end
 
 """
-`genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})` call `@chkdest`, obtain `dest = OkPkgTemplates.DEFAULT_DESTINATION()` and fall back to `genpkg(dest, yourpkgname, get_exprs(tp)...)`.
+`genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})` call `@chkdest`, obtain `dest = OkPkgTemplates.DEFAULT_DESTINATION` and fall back to `genpkg(dest, yourpkgname, get_exprs(tp)...)`.
 """
 function genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})
     @chkdest
-    dest = OkPkgTemplates.DEFAULT_DESTINATION()
+    dest = OkPkgTemplates.DEFAULT_DESTINATION
     genpkg(dest, yourpkgname, get_exprs(tp)...)
 end
 
