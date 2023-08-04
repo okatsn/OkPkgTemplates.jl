@@ -11,29 +11,29 @@ Return a path relative to the default template file directory
 mypkgtemplate_dir(paths::AbstractString...) = joinpath(DEFAULT_TEMPLATE_DIR[], paths...)
 
 """
-`@chkdest` check whether `OkPkgTemplates.DEFAULT_DESTINATION` is defined.
-It define `OkPkgTemplates.DEFAULT_DESTINATION = Pkg.devdir()` if `DEFAULT_DESTINATION` is empty.
+`@chkdest` check whether `OkPkgTemplates.DEFAULT_DESTINATION()` is defined.
+It define `OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()` if `DEFAULT_DESTINATION()` is empty.
 """
 macro chkdest()
-    if isempty(DEFAULT_DESTINATION)
-        expr = quote
-            dest = Pkg.devdir()
-            OkPkgTemplates.DEFAULT_DESTINATION = dest
-            dest
-        end
-    else
-        expr = quote
-            dest = DEFAULT_DESTINATION
-        end
-    end
+    # if isempty(DEFAULT_DESTINATION())
+    #     expr = quote
+    #         dest = Pkg.devdir()
+    #         OkPkgTemplates.DEFAULT_DESTINATION() = dest
+    #         dest
+    #     end
+    # else
+    #     expr = quote
+    #         dest = DEFAULT_DESTINATION()
+    #     end
+    # end
     return quote
-        @info "I'm in chkdest, where DEFAULT_DESTINATION is $(DEFAULT_DESTINATION)"
-        $expr
+        @info "I'm in chkdest, where DEFAULT_DESTINATION() is $(DEFAULT_DESTINATION())"
+        # $expr
     end
     # for `return $expr`,
     # ERROR: Global method definition around needs to be placed at the top level, or use "eval".
 
-    # CHECKPOINT: make `chkdest` a `macro` in which `OkPkgTemplates.DEFAULT_DESTINATION = dest`
+    # CHECKPOINT: make `chkdest` a `macro` in which `OkPkgTemplates.DEFAULT_DESTINATION() = dest`
     # - This is the only utility that needs macro.
     # - `Pkg.Types.Context().env` and `pathof(mod)` seems to work fine in both function and macro. See `whereami`
     # CHECKPOINT: after new release of OkPkgTemplates, use it to

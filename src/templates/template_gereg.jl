@@ -4,7 +4,7 @@
 pkgtemplating_gereg(yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
-        dir=DEFAULT_DESTINATION,
+        dir=DEFAULT_DESTINATION(),
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),

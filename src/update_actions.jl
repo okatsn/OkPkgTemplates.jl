@@ -26,11 +26,11 @@ function upactions(repo1, pkgname, TI::Type{<:TemplateIdentifier})
     repo0 = joinpath(tempdir, pkgname) # e.g., ./TEMPR_XXXXXX/TargetPackage
     tempdevdir = dirname(repo0)
     expr0 = quote
-        this_is_temp_str_for_okpkgtemplates_restore_hahaha = OkPkgTemplates.DEFAULT_DESTINATION
-        OkPkgTemplates.DEFAULT_DESTINATION = $tempdevdir
+        this_is_temp_str_for_okpkgtemplates_restore_hahaha = OkPkgTemplates.DEFAULT_DESTINATION()
+        OkPkgTemplates.DEFAULT_DESTINATION() = $tempdevdir
     end
     expr999 = quote
-        OkPkgTemplates.DEFAULT_DESTINATION = this_is_temp_str_for_okpkgtemplates_restore_hahaha
+        OkPkgTemplates.DEFAULT_DESTINATION() = this_is_temp_str_for_okpkgtemplates_restore_hahaha
     end
 
     @info "Update CI actions in $repo1; temporary working directory is $(tempdir); targeting package $pkgname"

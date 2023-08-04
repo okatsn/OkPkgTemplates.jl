@@ -43,7 +43,11 @@ julia> update(GeneralReg)
 ```
 """
 function update(args...)
-    @chkdest
+    if isempty(DEFAULT_DESTINATION())
+        @eval quote
+            OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()
+        end
+    end
     expr = upactions(args...)
     @eval $expr
 end
@@ -53,7 +57,11 @@ end
 `generate(args...)` evaluate the *expressions* returned by `genpkg`, and it takes exactly the same argument as `genpkg`.
 """
 function generate(args...)
-    @chkdest
+    if isempty(DEFAULT_DESTINATION())
+        @eval quote
+            OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()
+        end
+    end
     expr = genpkg(args...)
     @eval $expr
 end

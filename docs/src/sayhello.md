@@ -200,9 +200,9 @@ OkPkgTemplates.@sayhello3
 ```@repl
 using OkPkgTemplates
 
-OkPkgTemplates.DEFAULT_DESTINATION
+OkPkgTemplates.DEFAULT_DESTINATION()
 
 OkPkgTemplates.@chkdest
 
-OkPkgTemplates.DEFAULT_DESTINATION
+OkPkgTemplates.DEFAULT_DESTINATION()
 ```

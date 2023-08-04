@@ -15,7 +15,7 @@ struct XXX <: TemplateIdentifier end
 pkgtemplating_xxx(yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
-        dir=DEFAULT_DESTINATION,
+        dir=DEFAULT_DESTINATION(),
         julia=DEFAULT_JULIAVER(),
         plugins=[
             Git(; manifest=false),
@@ -50,7 +50,7 @@ abstract type TemplateIdentifier end
 `genpkg(yourpkgname::String, fs...)` execute scripts `fs` one by one in user's scope using `OkPkgTemplates`'s utilities.
 
 Please define `OkPkgTemplates.DEFAULT_**` for changing defaults.
-- If `OkPkgTemplates.DEFAULT_DESTINATION` is not defined, it is defined as `Pkg.devdir()` at user's scope in the first use.
+- If `OkPkgTemplates.DEFAULT_DESTINATION()` is not defined, it is defined as `Pkg.devdir()` at user's scope in the first use.
 
 
 !!! tip
@@ -61,9 +61,9 @@ Please define `OkPkgTemplates.DEFAULT_**` for changing defaults.
 
 
 # Example
-To specify output destination, redefine `DEFAULT_DESTINATION`
+To specify output destination, redefine `DEFAULT_DESTINATION()`
 ```
-OkPkgTemplates.DEFAULT_DESTINATION = pwd()
+OkPkgTemplates.DEFAULT_DESTINATION() = pwd()
 ```
 
 and then generate the Package
