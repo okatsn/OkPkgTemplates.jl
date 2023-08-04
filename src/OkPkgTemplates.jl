@@ -31,7 +31,7 @@ include("generate_actions.jl")
 include("templates/template_okreg.jl")
 include("templates/template_gereg.jl")
 include("update_actions.jl")
-export genpkg, @upactions, OkReg, GeneralReg
+export genpkg, OkReg, GeneralReg
 
 include("interface.jl")
 export update, generate
