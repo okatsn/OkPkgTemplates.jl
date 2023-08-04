@@ -31,6 +31,7 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
 
         OkPkgTemplates.generate(pkgname2build, TID)
         # test if file/dir exists
+        @test !isdir(dir_default_devdir(pkgname2build)) || dir_default_devdir(pkgname2build) # since I defined
         @test isdir(dir_targetfolder())
         @test isfile(dir_targetfolder("Project.toml"))
         # test for package name
@@ -49,7 +50,7 @@ using InteractiveUtils # I don't know why this is required for subtypes to be ab
 
         update(dir_targetfolder(), pkgname2build, TID)
         # ex must be evaluated under the scope of OkPkgTemplates; otherwise, error will occur since the current scope might not have pakage required in `ex`.
-
+        @test !isdir(dir_default_devdir(pkgname2build)) || dir_default_devdir(pkgname2build) # since I defined
         @test haskey(project_toml["extras"], "CompatHelperLocal") # make sure update_project_toml! works properly.
 
 
