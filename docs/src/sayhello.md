@@ -181,6 +181,50 @@ Noted that `ERROR: UndefVarError: 'ex' not defined` won't be raised when `ex` is
 sinx
 ```
 
+## (Re)Define variable/function
+
+```@example cxah8
+
+module HelloWorld
+    using Pkg
+    default_destination = ""
+
+    macro chkdest()
+      if isempty(default_destination)
+          expr = quote
+              dest = Pkg.devdir()
+              HelloWorld.default_destination = dest
+              dest
+          end
+      else
+          dest = default_destination
+          expr = quote 
+              $dest
+          end
+      end
+      return expr
+    end
+end
+```
+
+```@repl cxah8
+HelloWorld.default_destination
+
+HelloWorld.@chkdest
+
+HelloWorld.default_destination
+
+
+
+```
+
+```@example cxah8
+
+```
+
+```@example cxah8
+
+```
 
 ## Example 
 
