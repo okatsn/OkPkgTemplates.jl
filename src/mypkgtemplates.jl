@@ -11,14 +11,18 @@ Return a path relative to the default template file directory
 mypkgtemplate_dir(paths::AbstractString...) = joinpath(DEFAULT_TEMPLATE_DIR[], paths...)
 
 """
-`chkdest()` return `Pkg.devdir()` if `DEFAULT_DESTINATION()` is empty.
+`@chkdest` check whether `OkPkgTemplates.DEFAULT_DESTINATION()` is defined.
+It define `OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()` if `DEFAULT_DESTINATION()` is empty.
 """
-function chkdest()
-    dest = ifelse(
-        isempty(DEFAULT_DESTINATION()),
-        Pkg.devdir(),
-        DEFAULT_DESTINATION())
-
+macro chkdest()
+    if isempty(DEFAULT_DESTINATION())
+        dest = Pkg.devdir()
+    else
+        dest = DEFAULT_DESTINATION()
+    end
+    return quote
+        OkPkgTemplates.DEFAULT_DESTINATION() = $dest
+    end
     # CHECKPOINT: make `chkdest` a `macro` in which `OkPkgTemplates.DEFAULT_DESTINATION() = dest`
     # - This is the only utility that needs macro.
     # - `Pkg.Types.Context().env` and `pathof(mod)` seems to work fine in both function and macro. See `whereami`
@@ -31,6 +35,4 @@ function chkdest()
     #     since it also allows collaborator to register a new version by commenting on a commit.
     #     Providing by `PkgTemplates.jl`, the register.yaml does no harm, and TagBot by default
     #     can be triggered by comment.
-
-
 end

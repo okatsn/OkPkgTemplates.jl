@@ -1,12 +1,17 @@
 
 """
-For developer,
+# Create new template:
 
-## 1. add new `struct XXX <: TemplateIdentifier end` for every new `@genpkg`.
-
-## 2. add a new templating expression, e.g.,
+Inside OkPkgTemplates/src,
+1. add concrete `struct` of `Type{<:TemplateIdentifier}`.
+2. add a new templating expression (optional)
+3. add a new method `get_exprs` for `XXX`
 
 ```julia
+# 1
+struct XXX <: TemplateIdentifier end
+
+# 2
 pkgtemplating_xxx(dest, yourpkgname) = quote
     t = Template(;
         user=DEFAULT_USERNAME(),
@@ -27,17 +32,17 @@ pkgtemplating_xxx(dest, yourpkgname) = quote
 
     t(\$yourpkgname)
 end
+
+# 3
+get_exprs(::Type{XXX}) = [pkgtemplating_xxx, updateprojtoml_script]
 ```
 
-## 3. add a new method for `@genpkg` macro
+# Use the new template
 
-```julia
-get_exprs(::Type{XXX}) = [pkgtemplating_xxx, updateprojtoml_script] # Expressions to be executed
-macro genpkg(yourpkgname::String, xxx::Type{XXX})
-    dest = chkdest()
-    return genpkg(dest, yourpkgname, get_exprs(xxx)...)
-end
-```
+Generate: `genpkg("HelloMyPkg", XXX)`
+
+Update: `update(XXX)`
+
 """
 abstract type TemplateIdentifier end
 
@@ -45,7 +50,7 @@ abstract type TemplateIdentifier end
 `genpkg(yourpkgname::String, fs...)` execute scripts `fs` one by one in user's scope using `OkPkgTemplates`'s utilities.
 
 Please define `OkPkgTemplates.DEFAULT_**` for changing defaults.
-- If `OkPkgTemplates.DEFAULT_DESTINATION()` returns an empty string, it use `Pkg.devdir()` at user's scope.
+- If `OkPkgTemplates.DEFAULT_DESTINATION()` is not defined, it is defined as `Pkg.devdir()` at user's scope in the first use.
 
 
 !!! tip
@@ -63,16 +68,12 @@ OkPkgTemplates.DEFAULT_DESTINATION() = pwd()
 
 and then generate the Package
 ```julia
-@genpkg "MyNewProject" OkReg
+genpkg("MyNewProject", OkReg)
 ```
 
-!!! note
-    - Feel free to redefine `OkPkgTemplates.DEFAULT_...`
-
-!!! warning
-    In the following cases, write a new macro of your own referencing `@genpkg` instead, or just use `PkgTemplates` [as instructed](https://juliaci.github.io/PkgTemplates.jl/stable/user/#Saving-Templates-1):
-    - If you have the thought to redefine `OkPkgTemplates.PLUGIN_...`
-    - If you want to set `PkgTemplates.user_view` [(for example)](https://juliaci.github.io/PkgTemplates.jl/stable/user/#Extending-Existing-Plugins-1)
+!!! tip "Resource"
+    - [PkgTemplates/Saving-Templates](https://juliaci.github.io/PkgTemplates.jl/stable/user/#Saving-Templates-1):
+    - `PkgTemplates.user_view`: [Extending-Existing-Plugins](https://juliaci.github.io/PkgTemplates.jl/stable/user/#Extending-Existing-Plugins-1)
 
 # Also see the helps
 - `copymyfiles_script`
@@ -85,10 +86,20 @@ function genpkg(dest, yourpkgname, fs...)
     return Expr(:block, exprs...)
 end
 
-# KEYNOTE:
-# In this script, it contains scripts (`...._script`) that is the code to be executed at the run-time,
-# and the macro (e.g., `@genpkg`, `@upactions`) for calling these scripts.
-#
+"""
+`genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})` call `@chkdest`, obtain `dest = OkPkgTemplates.DEFAULT_DESTINATION()` and fall back to `genpkg(dest, yourpkgname, get_exprs(tp)...)`.
+"""
+function genpkg(yourpkgname, tp::Type{<:TemplateIdentifier})
+    @chkdest
+    dest = OkPkgTemplates.DEFAULT_DESTINATION()
+    genpkg(dest, yourpkgname, get_exprs(tp)...)
+end
+
+"""
+
+"""
+get_exprs(tp::Type{<:TemplateIdentifier}) = @error "Method `get_exprs` for `$tp` is undefined. It needs to be defined to return a vector of expressions."
+
 
 """
 After making the template successfully,

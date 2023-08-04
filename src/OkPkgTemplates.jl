@@ -29,8 +29,8 @@ include("generalgenpkg.jl")
 # template_**.jl uses **plugins.jl
 include("templates/template_okreg.jl")
 include("templates/template_gereg.jl")
-include("generatepkg.jl") # @genpkg uses templates/**
-export @genpkg, @upactions, OkReg, GeneralReg
+include("generatepkg.jl")
+export genpkg, @upactions, OkReg, GeneralReg
 
 include("interface.jl")
 export update

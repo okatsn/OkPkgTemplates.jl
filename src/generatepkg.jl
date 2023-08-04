@@ -22,7 +22,7 @@ function upactions(pwd1::String, pkgname::String, TI::Type{<:TemplateIdentifier}
     tempdir = joinpath(pwd1, "TEMPR_$(Random.randstring(10))")
     @info "Update CI actions in $pwd1; temporary working directory is $(tempdir); targeting package $pkgname"
 
-    genfns = [f(tempdir, pkgname) for f in get_exprs(TI)] # The scripts that @genpkg did.
+    genfns = [f(tempdir, pkgname) for f in get_exprs(TI)] # The scripts that genpkg did.
 
     repo0 = joinpath(tempdir, pkgname)
     repo1 = pwd1

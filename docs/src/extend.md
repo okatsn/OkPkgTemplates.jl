@@ -6,7 +6,7 @@ OkPkgTemplates.genpkg
 ```
 
 
-## Procedure to add a new method of `@genpkg`
+## Create and use a new pkg generating process
 ```@docs
 OkPkgTemplates.TemplateIdentifier
 ```

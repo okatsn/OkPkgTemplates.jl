@@ -197,39 +197,12 @@ OkPkgTemplates.@sayhello3
 
 ### Knowing Where am I
 
-#### The `whereami` example
-
-##### Macro call
-```@docs
-OkPkgTemplates.@whereami
-```
-
 ```@repl
 using OkPkgTemplates
 
 OkPkgTemplates.DEFAULT_DESTINATION()
 
-OkPkgTemplates.@whereami
+OkPkgTemplates.@chkdest
 
 OkPkgTemplates.DEFAULT_DESTINATION()
 ```
-
-##### Function call
-```@docs
-OkPkgTemplates.whereami
-```
-
-```@example a123
-using OkPkgTemplates
-OkPkgTemplates.DEFAULT_DESTINATION() = "" #hide
-OkPkgTemplates.DEFAULT_DESTINATION()
-```
-
-```@example a123
-OkPkgTemplates.whereami()
-```
-
-```@example a123
-OkPkgTemplates.DEFAULT_DESTINATION()
-```
-

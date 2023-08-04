@@ -48,8 +48,3 @@ end
 
 struct OkReg <: TemplateIdentifier end
 get_exprs(::Type{OkReg}) = [pkgtemplating_okreg, updateprojtoml_script]
-
-macro genpkg(yourpkgname::String, tp::Type{OkReg})
-    dest = chkdest()
-    return genpkg(dest, yourpkgname, get_exprs(tp)...)
-end
