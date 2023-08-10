@@ -16,9 +16,7 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
-        "Extend" => "extend.md",
-        "Keynote" =>
-            ["Macro call explained" => "sayhello.md"]
+        "Extend" => "extend.md"
     ]
 )
 

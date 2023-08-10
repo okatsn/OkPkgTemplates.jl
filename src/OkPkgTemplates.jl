@@ -1,6 +1,6 @@
 module OkPkgTemplates
 # Test
-include("docs_src_sayhello_md_related/sayhello.jl")
+
 # include("docs_src_sayhello_md_related/whereami.jl")
 
 
