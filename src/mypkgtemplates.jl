@@ -10,6 +10,12 @@ Return a path relative to the default template file directory
 """
 mypkgtemplate_dir(paths::AbstractString...) = joinpath(DEFAULT_TEMPLATE_DIR[], paths...)
 
+
+# CHECKPOINT: @chkdest don't work as expected. If @chkdest is applied instead, it is very strange that:
+# - `OkPkgTemplates.DEFAULT_DESTINATION() == Pkg.devdir()` always true in `for ... end`, but be user-defined ouside the for loop..
+# - However, in user's scope, everything seems to works fine.
+# - It's strange that the `rm(dir_targetfolder(), recursive=true)` in test can delete it.
+# - Checkout branch chkdest-not-deprecated to learn more.
 """
 `@chkdest` check whether `OkPkgTemplates.DEFAULT_DESTINATION()` is defined.
 It define `OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()` if `DEFAULT_DESTINATION()` is empty.

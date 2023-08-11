@@ -43,15 +43,7 @@ julia> update(GeneralReg)
 ```
 """
 function update(args...)
-    if isempty(DEFAULT_DESTINATION())
-        @eval quote
-            OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()
-        end
-    end # CHECKPOINT: @chkdest don't work as expected. If @chkdest is applied instead, it is very strange that:
-    # - `OkPkgTemplates.DEFAULT_DESTINATION() == Pkg.devdir()` always true in `for ... end`, but be user-defined ouside the for loop..
-    # - However, in user's scope, everything seems to works fine.
-    # - It's strange that the `rm(dir_targetfolder(), recursive=true)` in test can delete it.
-    # - Checkout branch chkdest-not-deprecated to learn more.
+
     expr = upactions(args...)
     @eval $expr
 end

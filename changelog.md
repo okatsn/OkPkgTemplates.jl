@@ -45,3 +45,7 @@ Read the `changelog.md` as a part of the release note.
 
 - Interface of `@upactions` has changed.
 - A fatal error fixed.
+
+## v0.6.3
+
+- Fix error in `upctions` and `update`.

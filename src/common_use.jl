@@ -7,7 +7,7 @@ add `"Documenter", "CompatHelperLocal"` to `[extras]` and `[targets]` as `runtes
 
 It modify `Project.toml` by add [extras] and [targets] for the scope of Test.
 """
-updateprojtoml_script(yourpkgname) = quote
+updateprojtoml_script(pkgfoldername) = quote
     @info "I'm updateprojtoml_script. OkPkgTemplates.DEFAULT_DESTINATION(): $(OkPkgTemplates.DEFAULT_DESTINATION())"
 
     function ordering(str)
@@ -48,7 +48,7 @@ updateprojtoml_script(yourpkgname) = quote
         return d
     end
 
-    projtoml_path = joinpath(DEFAULT_DESTINATION(), $yourpkgname, "Project.toml")
+    projtoml_path = joinpath(DEFAULT_DESTINATION(), $pkgfoldername, "Project.toml")
     d = TOML.parsefile(projtoml_path)
     update_project_toml!(d)
 
@@ -62,7 +62,7 @@ updateprojtoml_script(yourpkgname) = quote
     - Initiating the project.
     """
 
-    changelog_file = joinpath(DEFAULT_DESTINATION(), $yourpkgname, "changelog.md")
+    changelog_file = joinpath(DEFAULT_DESTINATION(), $pkgfoldername, "changelog.md")
     if !isfile(changelog_file)
         open(changelog_file, "w") do io
             write(io, string(cglog))

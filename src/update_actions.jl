@@ -21,13 +21,14 @@ end
 
 """
 function upactions(repo1, pkgname, TI::Type{<:TemplateIdentifier})
+    targetfolder = dirname(repo1)
     tempdir = abspath(mktempdir())
+    pkgfoldername = repo1 |> basename
     @info "I'm upactions"
     repo0 = joinpath(tempdir, pkgname) # e.g., ./TEMPR_XXXXXX/TargetPackage
-    tempdevdir = dirname(repo0)
     expr0 = quote
         this_is_temp_str_for_okpkgtemplates_restore_hahaha = OkPkgTemplates.DEFAULT_DESTINATION()
-        OkPkgTemplates.DEFAULT_DESTINATION() = $tempdevdir
+        OkPkgTemplates.DEFAULT_DESTINATION() = $tempdir
     end
     expr999 = quote
         OkPkgTemplates.DEFAULT_DESTINATION() = this_is_temp_str_for_okpkgtemplates_restore_hahaha
@@ -38,7 +39,8 @@ function upactions(repo1, pkgname, TI::Type{<:TemplateIdentifier})
     genfns = [f(pkgname) for f in get_exprs(TI)] # The scripts that genpkg did.
     hello = (repo0=repo0, repo1=repo1)
     script_copy_paste = copymyfiles_script(hello)
-    script_upprojtoml = updateprojtoml_script(pkgname) # Modify Project.toml by add [extras] and [targets] for the scope of Test.
+
+    script_upprojtoml = updateprojtoml_script(pkgfoldername) # Modify Project.toml by add [extras] and [targets] for the scope of Test.
     script_rm = quote
         rm($tempdir, recursive=true)
     end
@@ -46,8 +48,9 @@ function upactions(repo1, pkgname, TI::Type{<:TemplateIdentifier})
     return Expr(:block,
         expr0,
         letin.(genfns)...,
-        expr999,
+        :(OkPkgTemplates.DEFAULT_DESTINATION() = $targetfolder), # This is for updateprojtoml_script, it updates Project.toml at jointstation(OkPkgTemplates.DEFAULT_DESTINATION(), pkgfoldername)
         letin.(copy_paste_rm_update)...,
+        expr999,
     )
 end
 
@@ -56,7 +59,6 @@ function upactions(mod::Module, TI)
     # /home/jovyan/.julia/dev/OkPkgTemplates/(src/OkPkgTemplates.jl)"
     #                                  repo1^
     pkgname = string(mod)
-
     upactions(repo1, pkgname, TI)
 end
 
