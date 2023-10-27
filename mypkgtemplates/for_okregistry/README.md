@@ -35,6 +35,15 @@ This is a julia package created using `okatsn`'s preference, and this package is
 - [Use of Documenter](https://github.com/okatsn/OkPkgTemplates.jl#use-of-documenter)
 
 ## References
+### For a remote of different name
+
+Example workflow
+- Create `YourPackage.jl` with `OkPkgTemplates`
+- Create a new Repo on GitHub, saying `Hello-World`
+- Go to local path of YourPackage.jl, `git remote set-url origin https://<git-repo>/Hello-World.git`.
+- Use find all and Replace "YourPackage.jl" with "Hello-World" **EXCEPT** those **NOT** URL such as:
+  - `@testset "YourPackage.jl"` in `/test/runtest.jl`
+  - The `sitename` field in `/docs/make.jl`
 
 ### Auto-Registration
 - You have to add `ACCESS_OKREGISTRY` to the secret under the remote repo (e.g., https://github.com/okatsn/{{{PKG}}}.jl).

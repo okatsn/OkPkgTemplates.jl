@@ -7,7 +7,7 @@ https://okatsn.github.io/OkPkgTemplates.jl/
 [![Build Status](https://github.com/okatsn/OkPkgTemplates.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/okatsn/OkPkgTemplates.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/okatsn/OkPkgTemplates.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/okatsn/OkPkgTemplates.jl)
 
-`OkPkgTemplates` initiate julia package with CI presets that automate test, release tag, documentation and registry management **based on** [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) with my personal preferences. 
+`OkPkgTemplates` initiate julia package with CI presets that automate test, release tag, documentation and registry management **based on** [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) with my personal preferences. This package is developed referring [PkgTemplates.jl](https://juliaci.github.io/PkgTemplates.jl/stable) especially the part [Saving Templates](https://juliaci.github.io/PkgTemplates.jl/stable/user/#Saving-Templates-1).
 You can fork this repository and replace `okatsn/OkRegistry` and its path by your own.
 
 ## Basic use
