@@ -68,7 +68,8 @@ OkPkgTemplates.DEFAULT_DESTINATION() = pwd()
 
 and then generate the Package
 ```julia
-genpkg("MyNewProject", OkReg)
+t = genpkg("MyNewProject", OkReg)
+OkPkgTemplates.eval(t)
 ```
 
 !!! tip "Resource"
