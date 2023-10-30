@@ -1,7 +1,3 @@
-templatename = let t = subtypes(OkPkgTemplates.TemplateIdentifier)[1]
-    string(t)
-end
-
 """
 Overwrite/Update Github actions of the repository of the julia package in development; make sure the pacakge is under version control that the process can be reverted.
 
@@ -43,7 +39,7 @@ Update CIs in `OkPkgTemplates`:
 
 ```julia
 julia> using OkPkgTemplates
-julia> update($templatename)
+julia> update(GeneralReg)
 ```
 """
 function update(args...)
@@ -59,7 +55,7 @@ end
 
 # Example
 ```julia
-generate("MyNewProject", $templatename)
+generate("MyNewProject", GeneralReg)
 ```
 """
 function generate(args...)

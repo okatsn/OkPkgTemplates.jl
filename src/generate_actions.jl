@@ -47,10 +47,6 @@ Update: `update(XXX)`
 abstract type TemplateIdentifier end
 
 
-templatename = let t = subtypes(OkPkgTemplates.TemplateIdentifier)[1]
-    string(t)
-end
-
 """
 `genpkg(yourpkgname::String, fs...)` execute scripts `fs` one by one in user's scope using `OkPkgTemplates`'s utilities.
 
@@ -73,7 +69,7 @@ OkPkgTemplates.DEFAULT_DESTINATION() = pwd()
 
 and then generate the Package
 ```julia
-t = genpkg("MyNewProject", $templatename)
+t = genpkg("MyNewProject", GeneralReg)
 OkPkgTemplates.eval(t)
 ```
 
