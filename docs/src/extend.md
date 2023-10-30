@@ -1,10 +1,8 @@
-## The use of `genpkg`
-```@docs
-OkPkgTemplates.genpkg
-```
+## Add New custom templates
+
+Please refer
+
+### [The use of `genpkg`](@ref OkPkgTemplates.genpkg)
 
 
-## Create and use a new pkg generating process
-```@docs
-OkPkgTemplates.TemplateIdentifier
-```
+### [Create and use a new pkg generating process](@ref OkPkgTemplates.TemplateIdentifier)
