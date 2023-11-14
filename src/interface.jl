@@ -54,9 +54,26 @@ end
 
 
 # Example
+
+Generate julia package at `./MyNewProject`
+
 ```julia
 generate("MyNewProject", GeneralReg)
 ```
+
+Generate julia package at `.julia/dev/MyNewProject`
+
+```julia
+using Pkg
+OkPkgTemplates.DEFAULT_DESTINATION() = Pkg.devdir()
+generate("MyNewProject", OkReg)
+```
+
+!!! warning "Don't do this"
+    ```julia
+    generate(joinpath(Pkg.devdir(), "MolchanCB"), OkReg)
+    ```
+
 """
 function generate(args...)
     if isempty(DEFAULT_DESTINATION())
