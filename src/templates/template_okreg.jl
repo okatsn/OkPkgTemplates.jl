@@ -19,6 +19,7 @@ pkgtemplating_okreg(yourpkgname) = quote
             PLUGIN_README(),
             PLUGIN_TAGBOT(),
             PLUGIN_TEST(),
+            PLUGIN_DOCUMENTER(),
             PLUGIN_REGISTER()
         ]
     )

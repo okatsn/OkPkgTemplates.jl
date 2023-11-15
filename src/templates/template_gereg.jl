@@ -15,6 +15,7 @@ pkgtemplating_gereg(yourpkgname) = quote
             PkgTemplates.Readme(),
             PkgTemplates.TagBot(; changelog=tagbot_changelog()),
             PLUGIN_TEST(),
+            PLUGIN_DOCUMENTER(),
             RegisterAction()
         ]
     )
