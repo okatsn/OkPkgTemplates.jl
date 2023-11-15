@@ -82,6 +82,10 @@ end
 
 PLUGIN_README() = PkgTemplates.Readme(; file=my_okpkgtemplate_dir("README.md"), destination="README.md")
 
+PLUGIN_DOCUMENTER() = PkgTemplates.Documenter{GitHubActions}(;
+    make_jl=my_okpkgtemplate_dir("docs/make.jl"),
+)
+
 """
 `PLUGIN_TAGBOT()` returns an `PkgTemplates.TagBot`.
 You can redefine this function.

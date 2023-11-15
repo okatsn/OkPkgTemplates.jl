@@ -11,10 +11,10 @@ pkgtemplating_gereg(yourpkgname) = quote
             PLUGIN_COMPATHELPER(),
             PLUGIN_GITHUBACTION(),
             Codecov(), # https://about.codecov.io/
-            Documenter{GitHubActions}(),
             PkgTemplates.Readme(),
             PkgTemplates.TagBot(; changelog=tagbot_changelog()),
             PLUGIN_TEST(),
+            PLUGIN_DOCUMENTER(),
             RegisterAction()
         ]
     )
