@@ -1,5 +1,10 @@
 using {{{PKG}}}
 using Documenter
+# using DocumenterCitations
+# # 1. Uncomment this line and the CitationBibliography line
+# # 2. add docs/src/refs.bib
+# # 3. Cite something in refs.bib and add ```@bibliography ``` (in index.md, for example)
+
 
 DocMeta.setdocmeta!({{{PKG}}}, :DocTestSetup, :(using {{{PKG}}}); recursive=true)
 
@@ -27,6 +32,9 @@ makedocs(;
     pages=[
         "Home" => "index.md",
     ],
+    # plugins=[
+    #     CitationBibliography(joinpath(@__DIR__, "src", "refs.bib")),
+    # ],
 {{#MAKEDOCS_KWARGS}}
     {{{first}}}={{{second}}},
 {{/MAKEDOCS_KWARGS}}
