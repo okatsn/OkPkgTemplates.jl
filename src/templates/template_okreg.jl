@@ -14,7 +14,7 @@ pkgtemplating_okreg(yourpkgname) = quote
             Git(; manifest=false),
             PLUGIN_COMPATHELPER(),
             PLUGIN_GITHUBACTION(),
-            # Codecov(), # https://about.codecov.io/ # TODO: I didn't figure out how code coverage works
+            Codecov(), # https://about.codecov.io/ # TODO: I didn't figure out how code coverage works
             PLUGIN_README(),
             PLUGIN_TAGBOT(),
             PLUGIN_TEST(),

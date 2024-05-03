@@ -9,11 +9,22 @@ on:
     types:
       - created
   workflow_dispatch:
-
-## Allow permissions may fix some error; also see register.yml
-## - see [Tagbot-setup](https://github.com/JuliaRegistries/TagBot#setup)
+    inputs:
+      lookback:
+        default: "3"
 permissions:
+  actions: read
+  checks: read
   contents: write
+  deployments: read
+  issues: read
+  discussions: read
+  packages: read
+  pages: read
+  pull-requests: read
+  repository-projects: read
+  security-events: read
+  statuses: read
 # For public repo, this is all you need.
 # For private repo, you have to add `with: token: TAG_BLABLABLA` of created PAT named `TAG_BLABLABLA` for example with permissions:
 # - Read access to actions, deployments, discussions, issues, metadata, pages, and pull requests

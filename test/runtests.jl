@@ -1,8 +1,6 @@
 using Test
 # using TestItems
 using OkPkgTemplates
-using Pkg # required in e.g., test/mypkgtemplates.jl
-
 
 function targetlist(targetexpr::Regex, dir2walk::AbstractString)
     # targetexpr = r"(\.jl)$";
@@ -36,7 +34,7 @@ using Documenter
     # See also https://documenter.juliadocs.org/stable/man/doctests/#Setup-Code
 
 
-    doctest(OkPkgTemplates; manual=false) # this makes jldoctest also be tested in a local test
+    doctest(OkPkgTemplates; manual = false) # this makes jldoctest also be tested in a local test
 end
 
 using CompatHelperLocal
