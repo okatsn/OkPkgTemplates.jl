@@ -7,16 +7,16 @@ name: Register Package to OkRegistry
 on:
   push:
     paths:
-      - 'Project.toml'
+      - "Project.toml"
   issue_comment:
     types:
       - created
   workflow_dispatch:
 
-env: 
+env:
   # It seems to be redundant to define them first.
-  CHANGELOG_MESSAGE: 'CHANGELOG_MESSAGE not available'
-  JULIA_VERSION: ' '
+  CHANGELOG_MESSAGE: "CHANGELOG_MESSAGE not available"
+  JULIA_VERSION: " "
 
 permissions:
   actions: read
@@ -37,23 +37,23 @@ jobs:
     # if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
     runs-on: ubuntu-20.04
     steps:
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: 1.8.5
       - uses: okatsn/add-registry@v2
-      - uses: actions/checkout@v3 # see https://github.com/actions/checkout
+      - uses: actions/checkout@v4 # see https://github.com/actions/checkout
         with:
           path: TEMP
-      - uses: actions/checkout@v3 # see https://github.com/actions/checkout
+      - uses: actions/checkout@v4 # see https://github.com/actions/checkout
         with:
           repository: okatsn/OkRegistry
           path: OkRegistry
           token: ${{ secrets.ACCESS_OKREGISTRY }}
-    # Update OkRegistry first.
-    # 1. Current path is critical. Please refer to "add_local_pkg_to_registry.jl" in OkRegistry.
-    # 2. `git config` is required, and has to be done in repo OkRegistry (cd OkRegistry must precede)
-    # 3. Personal registry is add per julia install; that is, OkRegistry should be added before `Pkg.instantiate()`
-    # 4. The empty General registry issue is solved after okatsn/add-registry@v2.0.1; the following code runs only when okatsn/add-registry@v2.0.1 (or later) is applied
+      # Update OkRegistry first.
+      # 1. Current path is critical. Please refer to "add_local_pkg_to_registry.jl" in OkRegistry.
+      # 2. `git config` is required, and has to be done in repo OkRegistry (cd OkRegistry must precede)
+      # 3. Personal registry is add per julia install; that is, OkRegistry should be added before `Pkg.instantiate()`
+      # 4. The empty General registry issue is solved after okatsn/add-registry@v2.0.1; the following code runs only when okatsn/add-registry@v2.0.1 (or later) is applied
       - run: |
           cd OkRegistry
           git config --local user.email "action@github.com"
@@ -66,21 +66,21 @@ jobs:
             '
           cd ..
       - uses: okatsn/get-changelog@v1
-        with: 
+        with:
           dir0: TEMP
         id: regist
-    # KEYNOTE:
-    # - Declare dynamic variables (not used in this script) https://dev.to/a1ex/tricks-of-declaring-dynamic-variables-in-bash-15b9
-    # - How to override an environment variable in Github Actions? https://stackoverflow.com/questions/66687561/how-to-override-an-environment-variable-in-github-actions
+      # KEYNOTE:
+      # - Declare dynamic variables (not used in this script) https://dev.to/a1ex/tricks-of-declaring-dynamic-variables-in-bash-15b9
+      # - How to override an environment variable in Github Actions? https://stackoverflow.com/questions/66687561/how-to-override-an-environment-variable-in-github-actions
 
-      - name: Trigger next workflow  # You may alternatively use https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idneeds 
+      - name: Trigger next workflow # You may alternatively use https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idneeds
         if: success() # https://docs.github.com/en/actions/learn-github-actions/expressions#success
         # && github.event_name == 'push' # KEYNOTE: must have this condition if `github.event.commits` is used in the followings. `github.event.commits` is only available in [push webhook payload](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push).
         # if: success() # Use this condition instead if `github.event.commits` is not applied herein after AND you want trigger-tagbot dispatch workflows `on` events other that `push`.
-        env: 
+        env:
           CHANGELOG_MESSAGE: ${{ steps.regist.outputs.content }}
           JULIA_VERSION: ${{ steps.regist.outputs.version }}
-        uses: peter-evans/repository-dispatch@v2 # See https://github.com/peter-evans/repository-dispatch
+        uses: peter-evans/repository-dispatch@v3 # See https://github.com/peter-evans/repository-dispatch
         with:
           repository: ${{ github.repository }}
           event-type: trigger-tagbot
