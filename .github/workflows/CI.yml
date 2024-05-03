@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-    tags: ['*']
+    tags: ["*"]
   pull_request:
   workflow_dispatch:
 concurrency:
@@ -27,9 +27,9 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.10'
-          - '1.9'
-          - 'nightly'
+          - "1.10"
+          - "1.9"
+          - "nightly"
         os:
           - ubuntu-latest
         arch:
@@ -61,9 +61,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v1
         with:
-          version: '1'
-      - uses: okatsn/add-registry@v1
+          version: "1"
       - uses: julia-actions/cache@v1
+      - uses: okatsn/add-registry@v2
       - name: Configure doc environment
         shell: julia --project=docs --color=yes {0}
         run: |
