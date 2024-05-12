@@ -57,12 +57,12 @@ jobs:
         # This step is required since in a process that creates a git repo is going to be tested; thus, Git should be configured
         # --local can only be used inside a git repo.
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-      - uses: julia-actions/cache@v1
-      - uses: okatsn/add-registry@v1
+      - uses: julia-actions/cache@v2
+      - uses: okatsn/add-registry@v2
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       <<#HAS_CODECOV>>
@@ -88,10 +88,10 @@ jobs:
       statuses: write
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v1
+      - uses: julia-actions/setup-julia@v2
         with:
           version: '1'
-      - uses: julia-actions/cache@v1
+      - uses: julia-actions/cache@v2
       - uses: okatsn/add-registry@v2
       - name: Configure doc environment
         shell: julia --project=docs --color=yes {0}
