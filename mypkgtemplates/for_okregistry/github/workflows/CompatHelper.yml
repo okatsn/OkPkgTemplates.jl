@@ -1,9 +1,9 @@
 # Ref: https://github.com/JuliaCI/PkgTemplates.jl/blob/master/templates/github/workflows/CompatHelper.yml
 name: CompatHelper
 on:
-  schedule:
-    - cron: <<&CRON>>
   workflow_dispatch:
+  # schedule:
+  #   - cron: <<&CRON>>
 
 permissions:
   contents: write
