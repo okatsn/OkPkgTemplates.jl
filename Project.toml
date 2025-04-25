@@ -1,7 +1,7 @@
 name = "OkPkgTemplates"
 uuid = "38290ba8-8fbe-457b-bf75-0e4980da3840"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.8.3"
+version = "0.8.4"
 
 [deps]
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -14,8 +14,7 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 PkgTemplates = "0.7"
-TOML = "1"
-julia = "1.10"
+julia = "1.10, 1.11"
 
 [extras]
 CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
