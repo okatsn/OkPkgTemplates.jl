@@ -41,10 +41,10 @@ jobs:
         with:
           version: 1.10.10
       - uses: okatsn/add-registry@v2
-      - uses: actions/checkout@v4 # see https://github.com/actions/checkout
+      - uses: actions/checkout@v5 # see https://github.com/actions/checkout
         with:
           path: TEMP
-      - uses: actions/checkout@v4 # see https://github.com/actions/checkout
+      - uses: actions/checkout@v5 # see https://github.com/actions/checkout
         with:
           repository: okatsn/OkRegistry
           path: OkRegistry
@@ -80,7 +80,7 @@ jobs:
         env:
           CHANGELOG_MESSAGE: ${{ steps.regist.outputs.content }}
           JULIA_VERSION: ${{ steps.regist.outputs.version }}
-        uses: peter-evans/repository-dispatch@v3 # See https://github.com/peter-evans/repository-dispatch
+        uses: peter-evans/repository-dispatch@v4 # See https://github.com/peter-evans/repository-dispatch
         with:
           repository: ${{ github.repository }}
           event-type: trigger-tagbot
